@@ -51,15 +51,33 @@ header {
   box-shadow: 0 18px 60px rgba(31, 41, 51, 0.08);
 }
 
-.logo {
-  font-size: 24px;
-  font-weight: 800;
-  color: var(--forest);
-  letter-spacing: -0.04em;
+.logo{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    cursor:pointer;
 }
 
-.logo span {
-  color: var(--gold);
+.logo img{
+    width:42px;
+    height:42px;
+    object-fit:contain;
+    transition:0.3s ease;
+}
+
+.logo:hover img{
+    transform:rotate(-6deg) scale(1.08);
+}
+
+.logo-text{
+    font-size:24px;
+    font-weight:800;
+    letter-spacing:-0.04em;
+    color:var(--forest);
+}
+
+.logo-text span{
+    color:var(--gold);
 }
 
 nav {
@@ -503,7 +521,15 @@ footer {
 <body>
 
 <header>
-  <div class="logo">Demos<span>Vita</span></div>
+  <div class="logo">
+
+    <img src="images/logo.png" alt="DemosVita Logo">
+
+    <div class="logo-text">
+        Demos<span>Vita</span>
+    </div>
+
+</div>
   <nav>
     <a href="#filosofia">Filosofía</a>
     <a href="#misiones">Misiones</a>
