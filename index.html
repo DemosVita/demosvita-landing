@@ -816,7 +816,13 @@ Sino porque decidiste empezar a vivirla.
       Estamos buscando a las primeras personas que quieran probar la Beta de DemosVita. Si sientes que este movimiento también es para ti, queremos contar contigo.
     </p>
 
-<form id="waitlist-form">
+<form
+  id="waitlist-form"
+  action="https://script.google.com/macros/s/AKfycbzme-N6AQg7oFscO03kPERw7MbQFDKmHmslsJJ3bRooRoJbEfJysQyhewZFLmKgvM3R4A/exec"
+  method="POST"
+  target="hidden_iframe"
+  onsubmit="submitted=true;"
+>
 
   <input
     type="email"
@@ -832,7 +838,10 @@ Sino porque decidiste empezar a vivirla.
 
 </form>
 
+<iframe name="hidden_iframe" style="display:none;" onload="if(submitted){showSuccessMessage();}"></iframe>
+
 <p id="form-message"></p>
+
   </div>
 </section>
 
@@ -851,59 +860,17 @@ Now it's your turn.</p>
 
 </footer>
 <script>
+let submitted = false;
 
-const form =
-  document.getElementById("waitlist-form");
+function showSuccessMessage(){
+  const form = document.getElementById("waitlist-form");
+  const message = document.getElementById("form-message");
 
-const message =
-  document.getElementById("form-message");
+  message.innerText = "¡Bienvenido al movimiento DemosVita!";
+  form.reset();
 
-form.addEventListener(
-  "submit",
-  async function(e){
-
-    e.preventDefault();
-
-    const email =
-      document.getElementById("email").value;
-
-    message.innerText =
-      "Uniéndote al movimiento...";
-
-    try{
-
-      const response =
-        await fetch(
-          "https://script.google.com/macros/s/AKfycbzme-N6AQg7oFscO03kPERw7MbQFDKmHmslsJJ3bRooRoJbEfJysQyhewZFLmKgvM3R4A/exec",
-          {
-            method:"POST",
-            headers:{
-              "Content-Type":"application/json"
-            },
-            body:JSON.stringify({
-              email:email
-            })
-          }
-        );
-
-      message.innerText =
-        "¡Bienvenido al movimiento DemosVita!";
-
-      form.reset();
-
-    }
-    catch(error){
-
-      console.error(error);
-
-      message.innerText =
-        "Ha ocurrido un error. Inténtalo de nuevo.";
-
-    }
-
-  }
-);
-
+  submitted = false;
+}
 </script>
 </body>
 </html>
