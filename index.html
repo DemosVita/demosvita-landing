@@ -59,10 +59,10 @@ header {
 }
 
 .logo img{
-    width:42px;
-    height:42px;
+    width:48px;
+    height:48px;
     object-fit:contain;
-    transition:0.3s ease;
+    transition:.3s;
 }
 
 .logo:hover img{
@@ -79,7 +79,41 @@ header {
 .logo-text span{
     color:var(--gold);
 }
+.footer-logo{
 
+width:48px;
+
+margin-bottom:18px;
+
+}
+
+footer h3{
+
+font-size:28px;
+
+margin-bottom:12px;
+
+color:var(--forest);
+
+}
+
+footer p{
+
+color:var(--muted);
+
+line-height:1.8;
+
+}
+
+.copyright{
+
+margin-top:26px;
+
+font-size:14px;
+
+opacity:.7;
+
+}
 nav {
   display: flex;
   gap: 28px;
@@ -112,7 +146,10 @@ nav a {
     radial-gradient(circle at 20% 20%, rgba(212,160,23,0.18), transparent 28%),
     linear-gradient(180deg, #FAF9F6 0%, #F3EFE6 100%);
 }
-
+.hero-logo{
+    width:72px;
+    margin-bottom:28px;
+}
 .hero-text {
   max-width: 720px;
 }
@@ -252,7 +289,24 @@ h2 {
   font-size: 19px;
   line-height: 1.7;
 }
+.manifesto{
+    max-width:700px;
+    margin:40px auto 0;
+    text-align:center;
+}
 
+.manifesto p{
+    font-size:22px;
+    line-height:1.8;
+    margin:18px 0;
+    color:var(--muted);
+}
+
+.manifesto p:last-child{
+    color:var(--forest);
+    font-size:28px;
+    font-weight:800;
+}
 .cards {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -523,7 +577,7 @@ footer {
 <header>
   <div class="logo">
 
-    <img src="logo.png" alt="DemosVita Logo">
+    <img src="logo-green.png" alt="DemosVita Logo">
 
     <div class="logo-text">
         Demos<span>Vita</span>
@@ -540,18 +594,30 @@ footer {
 
 <section class="hero">
   <div class="hero-text">
-    <div class="badge">✦ EL MUNDO REAL TE ESTÁ ESPERANDO </div>
+    <img src="logo-white.png" class="hero-logo" alt="DemosVita">
     <h1>
     La aventura nunca desapareció.
     <em>Solo dejamos de buscarla.</em>
     </h1>
-    <p>
-      Durante miles de años exploramos el mundo.
+    <div class="manifesto">
 
-      Hoy exploramos pantallas.
+    <p>Hace miles de años caminábamos.</p>
 
-      DemosVita existe para despertar ese instinto que nunca desapareció.
-    </p>
+    <p>Explorábamos.</p>
+
+    <p>Descubríamos.</p>
+
+    <p>Hablábamos con desconocidos.</p>
+
+    <p>Aprendíamos observando el mundo.</p>
+
+    <p>Hoy seguimos teniendo ese instinto.</p>
+
+    <p>Solo que lo hemos olvidado.</p>
+
+    <p><strong>DemosVita existe para despertarlo otra vez.</strong></p>
+
+</div>
     <div class="actions">
       <a href="#beta" class="primary">Quiero formar parte del movimiento</a>
       <a href="#filosofia" class="secondary">¿Por qué existe DemosVita? →</a>
@@ -771,7 +837,18 @@ Sino porque decidiste empezar a vivirla.
 </section>
 
 <footer>
-  © 2026 DemosVita · The world was always there. Now it's your turn.
+
+<img src="logo-green.png" class="footer-logo" alt="DemosVita">
+
+<h3>DemosVita</h3>
+
+<p>The world was always there.<br>
+Now it's your turn.</p>
+
+<p class="copyright">
+© 2026 DemosVita
+</p>
+
 </footer>
 
 </body>
