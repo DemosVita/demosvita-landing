@@ -140,20 +140,18 @@ nav a {
   display: grid;
   grid-template-columns: 1.05fr 0.95fr;
   align-items: center;
-  gap: 56px;
-  padding: 150px 8% 80px;
+  gap: 72px;
+  padding: 120px 8% 70px;
   background:
     radial-gradient(circle at 20% 20%, rgba(212,160,23,0.18), transparent 28%),
     linear-gradient(180deg, #FAF9F6 0%, #F3EFE6 100%);
 }
-.hero-logo{
-    width:72px;
-    margin-bottom:28px;
+.hero-text{
+    max-width:720px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
 }
-.hero-text {
-  max-width: 720px;
-}
-
 .badge {
   display: inline-flex;
   align-items: center;
@@ -168,32 +166,28 @@ nav a {
   margin-bottom: 28px;
 }
 
-.hero h1 {
-  font-size: clamp(48px, 7vw, 88px);
-  line-height: 0.96;
-  letter-spacing: -0.07em;
-  margin-bottom: 28px;
+.hero h1{
+    font-size:clamp(48px,7vw,88px);
+    line-height:.95;
+    letter-spacing:-0.07em;
+    margin-bottom:36px;
 }
-
 .hero h1 em {
   font-style: normal;
   color: var(--forest);
 }
-
-.hero p {
-  font-size: 21px;
-  line-height: 1.7;
-  color: var(--muted);
-  max-width: 610px;
-  margin-bottom: 36px;
+.hero p{
+    font-size:22px;
+    line-height:1.8;
+    max-width:560px;
+    color:var(--muted);
+    margin-bottom:42px;
 }
-
 .actions {
   display: flex;
   gap: 16px;
   align-items: center;
 }
-
 .primary {
   background: linear-gradient(135deg, var(--forest), #326B50);
   color: white;
@@ -209,7 +203,6 @@ nav a {
   text-decoration: none;
   font-weight: 800;
 }
-
 .hero-image {
   position: relative;
   height: 640px;
@@ -222,7 +215,6 @@ nav a {
   background-position: center;
   box-shadow: 0 40px 100px rgba(31, 41, 51, 0.25);
 }
-
 .floating-card {
   position: absolute;
   left: 28px;
@@ -234,40 +226,33 @@ nav a {
   border-radius: 28px;
   padding: 24px;
 }
-
 .floating-card small {
   color: var(--forest);
   font-weight: 800;
 }
-
 .floating-card h3 {
   margin: 8px 0 14px;
   font-size: 24px;
 }
-
 .progress {
   height: 9px;
   background: rgba(35,78,59,0.12);
   border-radius: 99px;
   overflow: hidden;
 }
-
 .progress div {
   width: 64%;
   height: 100%;
   background: linear-gradient(90deg, var(--forest), var(--gold));
 }
-
 section {
   padding: 110px 8%;
 }
-
 .section-head {
   max-width: 760px;
   margin: 0 auto 60px;
   text-align: center;
 }
-
 .kicker {
   color: var(--gold);
   font-weight: 900;
@@ -276,14 +261,12 @@ section {
   text-transform: uppercase;
   margin-bottom: 16px;
 }
-
 h2 {
   font-size: clamp(36px, 5vw, 62px);
   line-height: 1.03;
   letter-spacing: -0.055em;
   margin-bottom: 22px;
 }
-
 .section-head p {
   color: var(--muted);
   font-size: 19px;
@@ -594,7 +577,6 @@ footer {
 
 <section class="hero">
   <div class="hero-text">
-    <img src="logo-white.png" class="hero-logo" alt="DemosVita">
     <h1>
     La aventura nunca desapareció.
     <em>Solo dejamos de buscarla.</em>
