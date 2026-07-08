@@ -822,6 +822,36 @@ Sino porque decidiste empezar a vivirla.
   onsubmit="submitted=true;"
 >
 
+  <select name="perfil" required>
+    <option value="" selected disabled>
+      ¿Qué aventura te representa más?
+    </option>
+
+    <option value="explorador">
+      🌿 Explorador · Descubrir lugares y experiencias nuevas
+    </option>
+
+    <option value="conector">
+      🤝 Conector · Conocer personas y crear conexiones reales
+    </option>
+
+    <option value="valiente">
+      🚀 Valiente · Salir de mi zona de confort
+    </option>
+
+    <option value="inquieto">
+      🌟 Inquieto · Romper la rutina y aprovechar mejor mi tiempo
+    </option>
+
+    <option value="buscador">
+      🧭 Buscador · Crecer como persona y descubrir nuevas perspectivas
+    </option>
+
+    <option value="aventurero">
+      ⚔️ Aventurero · Convertir mi vida en una aventura
+    </option>
+  </select>
+
   <input
     type="email"
     id="email"
@@ -836,6 +866,13 @@ Sino porque decidiste empezar a vivirla.
 
 </form>
 
+<iframe
+  name="hidden_iframe"
+  style="display:none;"
+  onload="if(submitted){showSuccessMessage();}">
+</iframe>
+
+<p id="form-message"></p>
 <iframe name="hidden_iframe" style="display:none;" onload="if(submitted){showSuccessMessage();}"></iframe>
 
 <p id="form-message"></p>
