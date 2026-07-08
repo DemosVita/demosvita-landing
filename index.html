@@ -398,9 +398,9 @@ h2 {
 }
 
 .mission {
-  min-height: 340px;
+  min-height: 520px;
   border-radius: 36px;
-  padding: 28px;
+ padding: 30px;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
@@ -411,30 +411,32 @@ h2 {
   background-position: center;
 }
 
-.mission::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg, transparent 15%, rgba(0,0,0,0.72) 100%);
+.mission::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:linear-gradient(
+        to top,
+        rgba(0,0,0,.82) 0%,
+        rgba(0,0,0,.35) 40%,
+        rgba(0,0,0,0) 70%
+    );
+    z-index:1;
 }
 
-.mission * {
-  position: relative;
-  z-index: 1;
+.mission > *{
+    position:relative;
+    z-index:2;
 }
 
-.mission:nth-child(1) {
-  background-image: linear-gradient(180deg, transparent, rgba(0,0,0,.7)), url("./hero-city.png");
+.mission img{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    z-index:0;
 }
-
-.mission:nth-child(2) {
-  background: linear-gradient(135deg, #B98E4B, #234E3B);
-}
-
-.mission:nth-child(3) {
-  background: linear-gradient(135deg, #1F2933, #D4A017);
-}
-
 .xp {
   display: inline-block;
   width: fit-content;
