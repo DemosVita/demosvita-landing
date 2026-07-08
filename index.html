@@ -491,39 +491,85 @@ h2 {
   border: 1px solid rgba(35,78,59,0.08);
 }
 
-form {
-  margin: 36px auto 0;
-  max-width: 620px;
-  display: flex;
-  gap: 12px;
-  background: var(--off);
-  border: 1px solid rgba(31,41,51,0.1);
-  border-radius: 999px;
-  padding: 8px;
-}
+form{
+    margin:40px auto 0;
+    max-width:560px;
 
+    display:flex;
+    flex-direction:column;
+
+    gap:18px;
+}
 input,
-select {
-  flex: 1;
-  border: none;
-  background: transparent;
-  padding: 18px 22px;
-  outline: none;
-  font-size: 16px;
-  color: var(--charcoal);
+select{
+
+    width:100%;
+
+    border:1px solid rgba(31,41,51,.12);
+
+    background:white;
+
+    padding:18px 24px;
+
+    border-radius:18px;
+
+    font-size:16px;
+
+    color:var(--charcoal);
+
+    transition:.25s;
+
 }
 
+input:focus,
+select:focus{
+
+    border-color:var(--forest);
+
+    box-shadow:0 0 0 4px rgba(35,78,59,.08);
+
+}
+
+select{
+
+    cursor:pointer;
+
+}
 select {
   cursor: pointer;
 }
-button {
-  border: none;
-  background: var(--forest);
-  color: white;
-  padding: 18px 26px;
-  border-radius: 999px;
-  font-weight: 800;
-  cursor: pointer;
+button{
+
+    width:fit-content;
+
+    margin:10px auto 0;
+
+    padding:18px 40px;
+
+    border:none;
+
+    border-radius:999px;
+
+    background:var(--forest);
+
+    color:white;
+
+    font-size:16px;
+
+    font-weight:700;
+
+    cursor:pointer;
+
+    transition:.3s;
+
+}
+
+button:hover{
+
+    transform:translateY(-2px);
+
+    box-shadow:0 15px 40px rgba(35,78,59,.25);
+
 }
 
 footer {
