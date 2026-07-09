@@ -681,6 +681,97 @@ footer {
 .social-links a:hover {
   color: var(--gold);
 }
+
+
+/* FOOTER FINAL DEMOSVITA */
+.footer{
+    background:#234E3B;
+    color:white;
+    text-align:center;
+    padding:80px 30px 60px;
+    margin-top:0;
+}
+
+.footer-logo{
+    width:110px;
+    height:auto;
+    margin-bottom:25px;
+}
+
+.footer h3{
+    color:white;
+    font-size:34px;
+    margin-bottom:15px;
+}
+
+.footer-slogan{
+    color:rgba(255,255,255,.85);
+    font-size:18px;
+    line-height:1.8;
+    margin:0;
+}
+
+.footer-divider{
+    width:90px;
+    height:2px;
+    background:rgba(255,255,255,.25);
+    margin:40px auto;
+}
+
+.footer h4{
+    font-size:26px;
+    margin-bottom:18px;
+    color:#D8C3A5;
+}
+
+.footer-text{
+    max-width:620px;
+    margin:0 auto;
+    color:rgba(255,255,255,.80);
+    line-height:1.8;
+    font-size:17px;
+}
+
+.social-links{
+    display:flex;
+    justify-content:center;
+    gap:35px;
+    margin-top:35px;
+}
+
+.social-links a{
+    color:white;
+    text-decoration:none;
+    font-weight:700;
+    transition:.25s;
+}
+
+.social-links a:hover{
+    color:#D8C3A5;
+}
+
+.footer .copyright{
+    margin-top:55px;
+    font-size:14px;
+    color:rgba(255,255,255,.55);
+    opacity:1;
+}
+
+@media (max-width: 600px){
+    .footer{
+        padding:64px 24px 48px;
+    }
+
+    .footer h4{
+        font-size:22px;
+    }
+
+    .social-links{
+        flex-direction:column;
+        gap:16px;
+    }
+}
+
 </style>
 </head>
 
@@ -1009,48 +1100,46 @@ footer {
 </iframe>
 
 <p id="form-message"></p>
-<iframe name="hidden_iframe" style="display:none;" onload="if(submitted){showSuccessMessage();}"></iframe>
-
-<p id="form-message"></p>
 
   </div>
 </section>
 
-<footer>
+<footer class="footer">
 
-  <img src="logo-green.png" class="footer-logo" alt="DemosVita">
+    <img src="logo-green.png" class="footer-logo" alt="DemosVita">
 
-  <h3>DemosVita</h3>
+    <h3>DemosVita</h3>
 
-  <p>
-    The world was always there.<br>
-    Now it's your turn.
-  </p>
+    <p class="footer-slogan">
+        The world was always there.<br>
+        Now it's your turn.
+    </p>
 
-  <div class="footer-contact">
-    <h4>Estamos construyendo DemosVita junto a nuestra comunidad.</h4>
+    <div class="footer-divider"></div>
 
-    <p>
-      Si tienes una idea, una sugerencia o simplemente quieres saludarnos,
-      escríbenos por Instagram.
+    <h4>Construimos DemosVita junto a nuestra comunidad.</h4>
+
+    <p class="footer-text">
+        Toda gran aventura empieza con una conversación.
+        Si quieres compartir una idea, proponer una colaboración
+        o simplemente saludarnos, estaremos encantados de conocerte.
     </p>
 
     <div class="social-links">
-      <a href="https://www.instagram.com/demosvita" target="_blank" rel="noopener noreferrer">
-        Instagram
-      </a>
 
-      <span>·</span>
+        <a href="https://instagram.com/demosvita" target="_blank" rel="noopener noreferrer">
+            📷 Instagram
+        </a>
 
-      <a href="https://www.tiktok.com/@demosvita" target="_blank" rel="noopener noreferrer">
-        TikTok
-      </a>
+        <a href="https://tiktok.com/@demosvita" target="_blank" rel="noopener noreferrer">
+            🎵 TikTok
+        </a>
+
     </div>
-  </div>
 
-  <p class="copyright">
-    © 2026 DemosVita
-  </p>
+    <p class="copyright">
+        © 2026 DemosVita · Todos los derechos reservados.
+    </p>
 
 </footer>
 <script>
