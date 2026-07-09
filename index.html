@@ -1008,7 +1008,7 @@ form.addEventListener("submit", function () {
 
     submitted = true;
 
-    button.disabled = true;
+    button.setAttribute("disabled", "disabled");
     button.innerText = "⏳ Registrando...";
     loading.style.display = "block";
 
