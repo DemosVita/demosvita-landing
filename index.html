@@ -959,14 +959,13 @@ footer {
     required
   />
 
-  <button
-    id="submit-btn"
-    type="submit">
+  <button id="submit-btn" type="submit">
     Unirme al movimiento
-</button>
-<p id="loading-message" style="display:none;">
-⏳ Preparando tu acceso a DemosVita...
-</p>
+  </button>
+
+  <p id="loading-message" style="display:none; color:#234E3B; font-weight:700; text-align:center;">
+    ⏳ Preparando tu acceso a DemosVita...
+  </p>
 
 </form>
 
@@ -1001,14 +1000,33 @@ Now it's your turn.</p>
 <script>
 let submitted = false;
 
+const form = document.getElementById("waitlist-form");
+const button = document.getElementById("submit-btn");
+const loading = document.getElementById("loading-message");
+
+form.addEventListener("submit", function () {
+
+    submitted = true;
+
+    button.disabled = true;
+    button.innerText = "⏳ Registrando...";
+    loading.style.display = "block";
+
+});
+
 function showSuccessMessage(){
-  const form = document.getElementById("waitlist-form");
-  const message = document.getElementById("form-message");
 
-  message.innerText = "¡Bienvenido al movimiento DemosVita!";
-  form.reset();
+    const message = document.getElementById("form-message");
 
-  submitted = false;
+    loading.style.display = "none";
+
+    message.innerText = "✅ ¡Ya formas parte del origen de DemosVita!";
+
+    button.innerText = "✓ Registro completado";
+
+    form.reset();
+
+    submitted = false;
 }
 </script>
 </body>
