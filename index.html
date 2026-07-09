@@ -1009,6 +1009,7 @@ form.addEventListener("submit", function () {
     submitted = true;
 
     button.setAttribute("disabled", "disabled");
+    button.style.cursor = "not-allowed";
     button.innerText = "⏳ Registrando...";
     loading.style.display = "block";
 
