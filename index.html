@@ -139,6 +139,10 @@ nav a {
   font-weight: 700;
 }
 
+.mobile-label {
+  display: none;
+}
+
 .hero {
   min-height: 100vh;
   display: grid;
@@ -593,20 +597,96 @@ footer {
     font-weight:700;
 }
 @media (max-width: 900px) {
+  header {
+    top: 10px;
+    width: calc(100% - 20px);
+    height: 60px;
+    padding: 0 12px;
+    border-radius: 22px;
+  }
+
   nav {
     display: none;
   }
 
+  .logo {
+    gap: 6px;
+  }
+
+  .logo img {
+    width: 42px;
+    height: 42px;
+  }
+
+  .logo-text {
+    font-size: 19px;
+  }
+
+  .nav-btn {
+    padding: 10px 15px;
+    font-size: 13px;
+    white-space: nowrap;
+  }
+
+  .desktop-label {
+    display: none;
+  }
+
+  .mobile-label {
+    display: inline;
+  }
+
   .hero {
-    grid-template-columns: 1fr;
-    padding-top: 130px;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    padding: 105px 20px 60px;
+  }
+
+  /*
+    display: contents permite ordenar por separado el título,
+    el manifiesto, la imagen y el enlace en móvil.
+  */
+  .hero-text {
+    display: contents;
+  }
+
+  .hero h1 {
+    order: 1;
+    font-size: clamp(46px, 14vw, 68px);
+    margin-bottom: 0;
+  }
+
+  .manifesto {
+    order: 2;
+    margin-top: 0;
   }
 
   .hero-image {
-    height: 480px;
+    order: 3;
+    width: 100%;
+    height: 430px;
+    border-radius: 30px;
   }
 
-  .actions,
+  .actions {
+    order: 4;
+    width: 100%;
+    justify-content: center;
+    margin-top: -4px;
+  }
+
+  .secondary {
+    display: inline-flex;
+    justify-content: center;
+    width: 100%;
+    padding: 16px 20px;
+    border: 1px solid rgba(35, 78, 59, 0.18);
+    border-radius: 999px;
+    background: rgba(255,255,255,0.56);
+    text-align: center;
+  }
+
   form {
     flex-direction: column;
     align-items: stretch;
@@ -619,6 +699,32 @@ footer {
 
   .cta-box {
     padding: 42px 24px;
+  }
+}
+
+@media (max-width: 430px) {
+  .logo-text {
+    font-size: 17px;
+  }
+
+  .nav-btn {
+    padding: 9px 13px;
+  }
+
+  .hero-image {
+    height: 390px;
+  }
+
+  .floating-card {
+    left: 14px;
+    right: 14px;
+    bottom: 14px;
+    padding: 18px;
+    border-radius: 22px;
+  }
+
+  .floating-card h3 {
+    font-size: 20px;
   }
 }
   #waitlist-form {
@@ -717,7 +823,7 @@ footer {
     <a href="#misiones">Misiones</a>
     <a href="#viaje">Viaje</a>
   </nav>
-  <a href="#beta" class="nav-btn">Empieza tu misión</a>
+  <a href="#beta" class="nav-btn"><span class="desktop-label">Empieza tu misión</span><span class="mobile-label">Únete</span></a>
 </header>
 
 <section class="hero">
@@ -740,7 +846,6 @@ footer {
 
 </div>
     <div class="actions">
-      <a href="#beta" class="primary">Quiero formar parte del movimiento</a>
       <a href="#filosofia" class="secondary">¿Por qué existe DemosVita? →</a>
     </div>
   </div>
@@ -1023,9 +1128,6 @@ footer {
   style="display:none;"
   onload="if(submitted){showSuccessMessage();}">
 </iframe>
-
-<p id="form-message"></p>
-<iframe name="hidden_iframe" style="display:none;" onload="if(submitted){showSuccessMessage();}"></iframe>
 
 <p id="form-message"></p>
 
