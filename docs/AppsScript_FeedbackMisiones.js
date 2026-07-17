@@ -1,5 +1,7 @@
 /** Proyecto de Apps Script independiente para el feedback de misiones. */
 const FEEDBACK_CONFIG = Object.freeze({
+  // Copia el identificador situado entre /d/ y /edit en la URL de Google Sheets.
+  spreadsheetId: 'PON_AQUI_ID_GOOGLE_SHEET',
   sheetName: 'Feedback misiones',
   photoFolderName: 'DemosVita - Fotos feedback'
 });
@@ -28,7 +30,10 @@ function doPost(e) {
 }
 
 function getFeedbackSheet_() {
-  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  if (!FEEDBACK_CONFIG.spreadsheetId || FEEDBACK_CONFIG.spreadsheetId === 'PON_AQUI_ID_GOOGLE_SHEET') {
+    throw new Error('Falta configurar spreadsheetId con el identificador de Google Sheets.');
+  }
+  const ss = SpreadsheetApp.openById(FEEDBACK_CONFIG.spreadsheetId);
   let sheet = ss.getSheetByName(FEEDBACK_CONFIG.sheetName);
   if (!sheet) {
     sheet = ss.insertSheet(FEEDBACK_CONFIG.sheetName);
@@ -52,4 +57,11 @@ function cleanFeedback_(value) {
 
 function jsonFeedback_(data) {
   return ContentService.createTextOutput(JSON.stringify(data)).setMimeType(ContentService.MimeType.JSON);
+}
+
+/** Ejecuta esta función manualmente para preparar y comprobar la hoja. */
+function probarConexionConSheet() {
+  const sheet = getFeedbackSheet_();
+  console.log('Conexión correcta con: ' + sheet.getParent().getName());
+  console.log('Pestaña preparada: ' + sheet.getName());
 }
