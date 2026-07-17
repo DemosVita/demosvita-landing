@@ -41,6 +41,33 @@
           <input id="access-email" name="email" type="email" autocomplete="email" required placeholder="tu@email.com">
           <button class="submit-button" type="submit">Recibir mi código</button>
         </form>
+        <div class="registration-invitation">
+          <strong>¿Aún no tienes cuenta o es tu primera vez aquí?</strong>
+          <p>Activa tu número de Explorador o consigue uno nuevo.</p>
+          <button id="open-registration" class="text-button" type="button">Registrarme en DemosVita →</button>
+        </div>
+      </div>
+
+      <div id="registration-step" hidden>
+        <span class="eyebrow">NUEVO EXPLORADOR</span>
+        <h2>Crea tu cuenta</h2>
+        <p>Elige qué tipo de aventura te representa. Si ya tienes un número reservado, lo recuperaremos automáticamente.</p>
+        <form id="registration-form" class="access-form">
+          <label for="registration-archetype">¿Qué aventura te representa más?</label>
+          <select id="registration-archetype" name="archetype" required>
+            <option value="">Selecciona tu perfil</option>
+            <option value="explorador">🧭 Explorador · Descubrir lugares y experiencias</option>
+            <option value="conector">🤝 Conector · Crear conexiones reales</option>
+            <option value="valiente">🚀 Valiente · Salir de mi zona de confort</option>
+            <option value="inquieto">🌟 Inquieto · Romper la rutina</option>
+            <option value="buscador">👁️ Buscador · Descubrir nuevas perspectivas</option>
+            <option value="aventurero">⚔️ Aventurero · Convertir mi vida en una aventura</option>
+          </select>
+          <label for="registration-email">Correo electrónico</label>
+          <input id="registration-email" name="email" type="email" autocomplete="email" required placeholder="tu@email.com">
+          <button class="submit-button" type="submit">Crear mi cuenta</button>
+        </form>
+        <button id="back-to-login" class="text-button back-button" type="button">← Ya tengo cuenta</button>
       </div>
 
       <div id="code-step" hidden>
@@ -55,6 +82,11 @@
         <div class="access-links">
           <button id="change-email" class="text-button" type="button">Cambiar correo</button>
           <button id="resend-code" class="text-button" type="button">Reenviar código</button>
+        </div>
+        <div id="code-registration-invitation" class="registration-invitation" hidden>
+          <strong>¿No te llega el código?</strong>
+          <p>Puede que todavía no tengas una cuenta activa.</p>
+          <button id="register-from-code" class="text-button" type="button">Registrarme aquí →</button>
         </div>
       </div>
 
