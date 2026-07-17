@@ -1085,6 +1085,13 @@ footer {
   onsubmit="submitted=true;"
 >
 
+  <!-- Datos de atribución: se rellenan automáticamente desde la URL -->
+  <input type="hidden" id="utm_source" name="utm_source" value="">
+  <input type="hidden" id="utm_medium" name="utm_medium" value="">
+  <input type="hidden" id="utm_campaign" name="utm_campaign" value="">
+  <input type="hidden" id="utm_content" name="utm_content" value="">
+  <input type="hidden" id="landing_url" name="landing_url" value="">
+
   <select name="perfil" required>
     <option value="" selected disabled>
       ¿Qué aventura te representa más?
@@ -1182,7 +1189,51 @@ const form = document.getElementById("waitlist-form");
 const button = document.getElementById("submit-btn");
 const loading = document.getElementById("loading-message");
 
+/*
+  Captura los parámetros UTM del enlace de entrada.
+  También los guarda temporalmente para no perderlos si el usuario navega
+  por la propia landing antes de registrarse.
+*/
+function captureCampaignData() {
+    const params = new URLSearchParams(window.location.search);
+
+    const campaignData = {
+        utm_source: params.get("utm_source") || sessionStorage.getItem("utm_source") || "",
+        utm_medium: params.get("utm_medium") || sessionStorage.getItem("utm_medium") || "",
+        utm_campaign: params.get("utm_campaign") || sessionStorage.getItem("utm_campaign") || "",
+        utm_content: params.get("utm_content") || sessionStorage.getItem("utm_content") || "",
+        landing_url: sessionStorage.getItem("landing_url") || window.location.href
+    };
+
+    // Si llegan nuevos parámetros en la URL, se guardan para esta sesión.
+    ["utm_source", "utm_medium", "utm_campaign", "utm_content"].forEach(function(key) {
+        const valueFromUrl = params.get(key);
+        if (valueFromUrl) {
+            campaignData[key] = valueFromUrl;
+            sessionStorage.setItem(key, valueFromUrl);
+        }
+    });
+
+    // Conserva la primera URL de entrada con la que llegó el usuario.
+    if (!sessionStorage.getItem("landing_url")) {
+        sessionStorage.setItem("landing_url", window.location.href);
+        campaignData.landing_url = window.location.href;
+    }
+
+    document.getElementById("utm_source").value = campaignData.utm_source;
+    document.getElementById("utm_medium").value = campaignData.utm_medium;
+    document.getElementById("utm_campaign").value = campaignData.utm_campaign;
+    document.getElementById("utm_content").value = campaignData.utm_content;
+    document.getElementById("landing_url").value = campaignData.landing_url;
+}
+
+// Se ejecuta al cargar la página.
+captureCampaignData();
+
 form.addEventListener("submit", function () {
+
+    // Vuelve a asegurar los valores justo antes del envío.
+    captureCampaignData();
 
     submitted = true;
 
@@ -1204,6 +1255,10 @@ function showSuccessMessage(){
     button.innerText = "✓ Registro completado";
 
     form.reset();
+
+    // form.reset() vacía los campos ocultos; los restauramos por si el usuario
+    // vuelve a interactuar con el formulario en la misma sesión.
+    captureCampaignData();
 
     submitted = false;
 }
