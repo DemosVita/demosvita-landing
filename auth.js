@@ -37,8 +37,8 @@
     event.preventDefault();
     const token = codeInput.value.replace(/\D/g, '');
     codeInput.value = token;
-    if (token.length !== 6) {
-      showStatus('Introduce las seis cifras del correo.', true);
+    if (token.length < 6 || token.length > 10) {
+      showStatus('Introduce el código completo que aparece en el correo.', true);
       return;
     }
 
