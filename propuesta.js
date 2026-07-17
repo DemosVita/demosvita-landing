@@ -7,6 +7,7 @@
   const form = document.querySelector('#mission-proposal-form');
   const status = document.querySelector('#proposal-status');
   const button = form.querySelector('.submit-button');
+  button.disabled = true;
   let session;
 
   init();
