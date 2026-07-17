@@ -1,0 +1,83 @@
+INSTALACIÓN SEGURA - MÓDULO DE MISIONES DEMOSVITA
+=================================================
+
+IMPORTANTE
+----------
+Estos archivos se han creado aparte. No sustituyen index.html ni borran la
+landing actual. La forma recomendada de incorporarlos es una rama nueva de
+GitHub llamada feature/zona-misiones y después una Pull Request.
+
+ARCHIVOS PARA LA WEB
+--------------------
+- misiones.html
+- feedback.html
+- misiones.css
+- feedback.js
+
+ARCHIVO PARA GOOGLE SHEETS
+--------------------------
+- AppsScript_FeedbackMisiones.js
+
+PASOS PARA CONECTAR LA HOJA
+---------------------------
+1. Crea una hoja de cálculo nueva llamada "DemosVita - Feedback misiones".
+2. Copia su ID desde la URL. Es el texto situado entre /d/ y /edit:
+
+   https://docs.google.com/spreadsheets/d/ESTE_ES_EL_ID/edit
+
+3. Abre script.google.com y crea un proyecto nuevo llamado
+   "DemosVita Feedback Misiones". No lo añadas al proyecto de la lista de
+   espera, porque ambos tienen una función doPost(e).
+4. Pega AppsScript_FeedbackMisiones.txt o AppsScript_FeedbackMisiones.js.
+5. Sustituye en spreadsheetId:
+
+   PON_AQUI_ID_GOOGLE_SHEET
+
+   por el ID copiado, conservando las comillas.
+6. Implementar > Nueva implementación.
+7. Tipo: Aplicación web.
+8. Ejecutar como: tú.
+9. Quién tiene acceso: cualquiera.
+10. Implementa y autoriza Sheets y Drive.
+11. Copia la URL terminada en /exec.
+12. Abre feedback.js y sustituye:
+
+    PON_AQUI_URL_APPS_SCRIPT_FEEDBACK
+
+    por la URL copiada.
+
+La primera respuesta crea automáticamente la pestaña "Feedback misiones".
+Las fotos se guardan en una carpeta privada de Drive y la hoja contiene su URL.
+
+ENLACES POR CANAL
+-----------------
+Email personalizado:
+https://www.demosvita.com/feedback.html?mission=M01_HALAGO_HONESTO&source=email&explorer=7
+
+Instagram:
+https://www.demosvita.com/feedback.html?mission=M01_HALAGO_HONESTO&source=instagram
+
+TikTok:
+https://www.demosvita.com/feedback.html?mission=M01_HALAGO_HONESTO&source=tiktok
+
+Web:
+https://www.demosvita.com/feedback.html?mission=M01_HALAGO_HONESTO&source=web
+
+IMAGEN DE LA MISIÓN
+-------------------
+La página busca esta imagen:
+
+assets/misiones/halago-portada.png
+
+Si todavía no está subida, muestra automáticamente un fondo corporativo. Puede
+usarse la portada vertical existente, aunque más adelante conviene preparar una
+versión horizontal para la tarjeta.
+
+CAMBIO PENDIENTE EN LA LANDING
+------------------------------
+Cuando la rama haya sido probada, añadir al menú de index.html:
+
+<a href="/misiones.html">Misiones</a>
+<a href="/feedback.html">Reportar misión</a>
+
+No se ha modificado index.html para mantener la versión publicada intacta.
