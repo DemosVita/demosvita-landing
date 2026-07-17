@@ -37,30 +37,12 @@
       <div id="mission-summary" class="selected-mission" aria-live="polite"></div>
 
       <form id="mission-feedback-form" enctype="multipart/form-data">
-        <input type="hidden" name="action" value="missionFeedback">
-        <input type="hidden" id="missionId" name="missionId">
-        <input type="hidden" id="source" name="source">
-        <input type="hidden" id="explorerFromUrl" name="explorerFromUrl">
-        <input type="hidden" id="photoBase64" name="photoBase64">
-        <input type="hidden" id="photoName" name="photoName">
-        <input type="hidden" id="pageUrl" name="pageUrl">
-
         <fieldset>
-          <legend>1. Tu perfil</legend>
-          <p class="field-help">Esto nos permite asociar la experiencia a tu recorrido.</p>
-          <label class="question">¿Tienes número de Explorador?</label>
-          <div class="choice-grid">
-            <label class="choice"><input type="radio" name="hasExplorer" value="Sí" required><span>Sí, ya tengo uno</span></label>
-            <label class="choice"><input type="radio" name="hasExplorer" value="No" required><span>No, todavía no</span></label>
-          </div>
-          <div id="explorer-field" class="conditional" hidden>
-            <label for="explorerId">Número de Explorador</label>
-            <input id="explorerId" name="explorerId" type="text" inputmode="numeric" autocomplete="off" placeholder="Por ejemplo: 7">
-          </div>
-          <div id="signup-invitation" class="signup-invitation" hidden>
-            <strong>¿Te gustaría conseguir el tuyo?</strong>
-            <p>Regístrate gratis y recibe tu número personal y las próximas misiones por correo.</p>
-            <a href="/#unete">Conseguir mi número de Explorador →</a>
+          <legend>1. Tu cuenta</legend>
+          <p class="field-help">La misión quedará asociada automáticamente a tu recorrido.</p>
+          <div class="signup-invitation" aria-live="polite">
+            <strong id="report-profile-name">Preparando tu perfil de Explorador…</strong>
+            <p id="report-profile-email"></p>
           </div>
         </fieldset>
 
@@ -135,6 +117,6 @@
   <nav class="mobile-app-nav" aria-label="Navegación móvil">
     <a href="/"><span>⌂</span>Inicio</a><a href="/misiones.html"><span>✦</span>Misiones</a><a class="active" href="/feedback.html"><span>✓</span>Reportar</a><a href="/proponer-mision.html"><span>＋</span>Proponer</a>
   </nav>
-  <script src="feedback.js"></script>
+  <script defer src="feedback.js"></script>
 </body>
 </html>
