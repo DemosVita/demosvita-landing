@@ -853,6 +853,19 @@ footer {
     border-radius: 14px;
   }
 }
+
+.landing-auth-step{max-width:560px;margin:36px auto 0}
+.landing-auth-form{display:flex;flex-direction:column;gap:18px;margin:0}
+.landing-auth-form button{margin-top:2px}
+.landing-login-link{margin-top:22px;color:var(--muted)}
+.landing-login-link a{color:var(--forest);font-weight:800;text-decoration:none}
+.landing-code-copy h3,#landing-session-step h3{font-size:30px;color:var(--forest);margin-bottom:10px}
+.landing-code-copy p,#landing-session-step p{color:var(--muted);line-height:1.6}
+.landing-otp{text-align:center;font-size:28px!important;font-weight:800;letter-spacing:.28em}
+.landing-auth-links{display:flex;justify-content:center;gap:20px;margin-top:14px}
+.landing-auth-links button{margin:0;padding:6px;background:none;color:var(--forest);box-shadow:none}
+#landing-auth-status{min-height:24px;margin-top:20px;font-weight:700}
+#landing-session-step .primary{display:inline-block;margin-top:24px}
 </style>
 </head>
 
@@ -1110,86 +1123,53 @@ footer {
 </div>
 </section>
 
-<section class="cta" id="beta">
+<section class="cta" id="unete">
   <div class="cta-box">
-    <div class="kicker">Lista de espera</div>
-    <h2>No buscamos usuarios. 
-        Buscamos exploradores.</h2>
-    <p class="section-head p">
-      Estamos buscando a las primeras personas que quieran probar la Beta de DemosVita. Si sientes que este movimiento también es para ti, queremos contar contigo.
-    </p>
+    <div class="kicker">EMPIEZA TU AVENTURA</div>
+    <h2>Crea tu cuenta de Explorador.</h2>
+    <p class="section-head p">Recibe tu número personal, completa misiones y guarda tu progreso en un único lugar.</p>
 
-<form
-  id="waitlist-form"
-  action="https://script.google.com/macros/s/AKfycbw06FScRQKNKN4tN641AqaT2ucyZ-Gl3uS_39YeiRCqxtp8uhz9D2uym-N3nh8xpHqbtw/exec"
-  method="POST"
-  target="hidden_iframe"
-  onsubmit="submitted=true;"
->
+    <div id="landing-registration-step" class="landing-auth-step">
+      <form id="landing-registration-form" class="landing-auth-form">
+        <select id="landing-registration-archetype" name="archetype" required>
+          <option value="">¿Qué aventura te representa más?</option>
+          <option value="explorador">🧭 Explorador · Descubrir lugares y experiencias</option>
+          <option value="conector">🤝 Conector · Crear conexiones reales</option>
+          <option value="valiente">🚀 Valiente · Salir de mi zona de confort</option>
+          <option value="inquieto">🌟 Inquieto · Romper la rutina</option>
+          <option value="buscador">👁️ Buscador · Descubrir nuevas perspectivas</option>
+          <option value="aventurero">⚔️ Aventurero · Convertir mi vida en una aventura</option>
+        </select>
+        <input id="landing-registration-email" name="email" type="email" autocomplete="email" required placeholder="Tu correo electrónico">
+        <button type="submit">Crear mi cuenta</button>
+      </form>
+      <p class="landing-login-link">¿Ya tienes cuenta? <a href="/acceso.html">Entrar con mi correo →</a></p>
+    </div>
 
-  <!-- Datos de atribución: se rellenan automáticamente desde la URL -->
-  <input type="hidden" id="utm_source" name="utm_source" value="">
-  <input type="hidden" id="utm_medium" name="utm_medium" value="">
-  <input type="hidden" id="utm_campaign" name="utm_campaign" value="">
-  <input type="hidden" id="utm_content" name="utm_content" value="">
-  <input type="hidden" id="landing_url" name="landing_url" value="">
+    <div id="landing-code-step" class="landing-auth-step" hidden>
+      <div class="landing-code-copy">
+        <div class="kicker">REVISA TU CORREO</div>
+        <h3>Introduce tu código</h3>
+        <p>Lo hemos enviado a <strong id="landing-sent-email"></strong>.</p>
+      </div>
+      <form id="landing-code-form" class="landing-auth-form">
+        <input id="landing-access-code" name="code" class="landing-otp" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]{6,10}" minlength="6" maxlength="10" required placeholder="000000">
+        <button type="submit">Confirmar y entrar</button>
+      </form>
+      <div class="landing-auth-links">
+        <button id="landing-change-email" type="button">Cambiar correo</button>
+        <button id="landing-resend-code" type="button">Reenviar código</button>
+      </div>
+    </div>
 
-  <select name="perfil" required>
-    <option value="" selected disabled>
-      ¿Qué aventura te representa más?
-    </option>
+    <div id="landing-session-step" class="landing-auth-step" hidden>
+      <div class="kicker">TU CUENTA ESTÁ ACTIVA</div>
+      <h3>Tu aventura continúa.</h3>
+      <p>Ya has iniciado sesión en este dispositivo.</p>
+      <a class="primary" href="/cuenta.html">Ir a mi cuenta</a>
+    </div>
 
-    <option value="explorador">
-      🧭 Explorador · Descubrir lugares y experiencias nuevas
-    </option>
-
-    <option value="conector">
-      🤝 Conector · Conocer personas y crear conexiones reales
-    </option>
-
-    <option value="valiente">
-      🚀 Valiente · Salir de mi zona de confort
-    </option>
-
-    <option value="inquieto">
-      🌟 Inquieto · Romper la rutina y aprovechar mejor mi tiempo
-    </option>
-
-    <option value="buscador">
-      👁️ Buscador · Crecer como persona y descubrir nuevas perspectivas
-    </option>
-
-    <option value="aventurero">
-      ⚔️ Aventurero · Convertir mi vida en una aventura
-    </option>
-  </select>
-
-  <input
-    type="email"
-    id="email"
-    name="email"
-    placeholder="Tu correo electrónico"
-    required
-  />
-
-  <button id="submit-btn" type="submit">
-    Unirme al movimiento
-  </button>
-
-  <p id="loading-message" style="display:none; color:#234E3B; font-weight:700; text-align:center;">
-    ⏳ Preparando tu acceso a DemosVita...
-  </p>
-
-</form>
-
-<iframe
-  name="hidden_iframe"
-  style="display:none;"
-  onload="if(submitted){showSuccessMessage();}">
-</iframe>
-
-<p id="form-message"></p>
-
+    <p id="landing-auth-status" role="status" aria-live="polite"></p>
   </div>
 </section>
 
@@ -1230,86 +1210,8 @@ footer {
   <a href="/feedback.html"><span>✓</span>Reportar</a>
   <a href="/acceso.html"><span>●</span>Cuenta</a>
 </nav>
-<script>
-let submitted = false;
-
-const form = document.getElementById("waitlist-form");
-const button = document.getElementById("submit-btn");
-const loading = document.getElementById("loading-message");
-
-/*
-  Captura los parámetros UTM del enlace de entrada.
-  También los guarda temporalmente para no perderlos si el usuario navega
-  por la propia landing antes de registrarse.
-*/
-function captureCampaignData() {
-    const params = new URLSearchParams(window.location.search);
-
-    const campaignData = {
-        utm_source: params.get("utm_source") || sessionStorage.getItem("utm_source") || "",
-        utm_medium: params.get("utm_medium") || sessionStorage.getItem("utm_medium") || "",
-        utm_campaign: params.get("utm_campaign") || sessionStorage.getItem("utm_campaign") || "",
-        utm_content: params.get("utm_content") || sessionStorage.getItem("utm_content") || "",
-        landing_url: sessionStorage.getItem("landing_url") || window.location.href
-    };
-
-    // Si llegan nuevos parámetros en la URL, se guardan para esta sesión.
-    ["utm_source", "utm_medium", "utm_campaign", "utm_content"].forEach(function(key) {
-        const valueFromUrl = params.get(key);
-        if (valueFromUrl) {
-            campaignData[key] = valueFromUrl;
-            sessionStorage.setItem(key, valueFromUrl);
-        }
-    });
-
-    // Conserva la primera URL de entrada con la que llegó el usuario.
-    if (!sessionStorage.getItem("landing_url")) {
-        sessionStorage.setItem("landing_url", window.location.href);
-        campaignData.landing_url = window.location.href;
-    }
-
-    document.getElementById("utm_source").value = campaignData.utm_source;
-    document.getElementById("utm_medium").value = campaignData.utm_medium;
-    document.getElementById("utm_campaign").value = campaignData.utm_campaign;
-    document.getElementById("utm_content").value = campaignData.utm_content;
-    document.getElementById("landing_url").value = campaignData.landing_url;
-}
-
-// Se ejecuta al cargar la página.
-captureCampaignData();
-
-form.addEventListener("submit", function () {
-
-    // Vuelve a asegurar los valores justo antes del envío.
-    captureCampaignData();
-
-    submitted = true;
-
-    button.setAttribute("disabled", "disabled");
-    button.style.cursor = "not-allowed";
-    button.innerText = "⏳ Registrando...";
-    loading.style.display = "block";
-
-});
-
-function showSuccessMessage(){
-
-    const message = document.getElementById("form-message");
-
-    loading.style.display = "none";
-
-    message.innerText = "✅ ¡Ya formas parte del origen de DemosVita!";
-
-    button.innerText = "✓ Registro completado";
-
-    form.reset();
-
-    // form.reset() vacía los campos ocultos; los restauramos por si el usuario
-    // vuelve a interactuar con el formulario en la misma sesión.
-    captureCampaignData();
-
-    submitted = false;
-}
-</script>
+<script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script defer src="supabase-config.js"></script>
+<script defer src="landing-auth.js"></script>
 </body>
 </html>
