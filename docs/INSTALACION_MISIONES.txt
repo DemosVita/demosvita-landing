@@ -21,15 +21,26 @@ ARCHIVO PARA GOOGLE SHEETS
 PASOS PARA CONECTAR LA HOJA
 ---------------------------
 1. Crea una hoja de cálculo nueva llamada "DemosVita - Feedback misiones".
-2. Extensiones > Apps Script.
-3. Pega AppsScript_FeedbackMisiones.js.
-4. Implementar > Nueva implementación.
-5. Tipo: Aplicación web.
-6. Ejecutar como: tú.
-7. Quién tiene acceso: cualquiera.
-8. Implementa y autoriza Sheets y Drive.
-9. Copia la URL terminada en /exec.
-10. Abre feedback.js y sustituye:
+2. Copia su ID desde la URL. Es el texto situado entre /d/ y /edit:
+
+   https://docs.google.com/spreadsheets/d/ESTE_ES_EL_ID/edit
+
+3. Abre script.google.com y crea un proyecto nuevo llamado
+   "DemosVita Feedback Misiones". No lo añadas al proyecto de la lista de
+   espera, porque ambos tienen una función doPost(e).
+4. Pega AppsScript_FeedbackMisiones.txt o AppsScript_FeedbackMisiones.js.
+5. Sustituye en spreadsheetId:
+
+   PON_AQUI_ID_GOOGLE_SHEET
+
+   por el ID copiado, conservando las comillas.
+6. Implementar > Nueva implementación.
+7. Tipo: Aplicación web.
+8. Ejecutar como: tú.
+9. Quién tiene acceso: cualquiera.
+10. Implementa y autoriza Sheets y Drive.
+11. Copia la URL terminada en /exec.
+12. Abre feedback.js y sustituye:
 
     PON_AQUI_URL_APPS_SCRIPT_FEEDBACK
 
