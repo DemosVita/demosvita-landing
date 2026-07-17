@@ -106,8 +106,13 @@
   }
 
   function getReturnUrl() {
-    const requested = params.get('returnTo') || '/cuenta.html';
-    return requested.startsWith('/') && !requested.startsWith('//') ? requested : '/cuenta.html';
+    const requested = params.get('returnTo') || 'cuenta.html';
+    try {
+      const target = new URL(requested, location.href);
+      return target.origin === location.origin ? target.href : new URL('cuenta.html', location.href).href;
+    } catch (_) {
+      return new URL('cuenta.html', location.href).href;
+    }
   }
 
   function setBusy(button, busy, label) {
@@ -127,4 +132,3 @@
     return 'No hemos podido enviar el código. Revisa el correo e inténtalo de nuevo.';
   }
 })();
-
