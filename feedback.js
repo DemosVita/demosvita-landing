@@ -8,6 +8,7 @@
   const form = document.querySelector('#mission-feedback-form');
   const status = document.querySelector('#form-status');
   const button = form.querySelector('.submit-button');
+  button.disabled = true;
 
   let session;
   let mission;
