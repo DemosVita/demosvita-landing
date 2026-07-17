@@ -1,6 +1,6 @@
 (() => {
   // Pega aquí la URL /exec del Apps Script de feedback cuando esté desplegado.
-  const FEEDBACK_ENDPOINT = 'PON_AQUI_URL_APPS_SCRIPT_FEEDBACK';
+  const FEEDBACK_ENDPOINT = 'https://script.google.com/macros/s/AKfycby_uHy8FF71KaX9waQPbDNbf55BR8CH-EY0QwvGvdLteSwS34I3gJIsohfAQg2ZB1QpSg/exec';
   const missions = {
     M01_HALAGO_HONESTO: { name: 'El halago honesto', category: 'Conecta', xp: 150 },
     IDEA: { name: 'Propuesta de nueva misión', category: 'Comunidad', xp: 0 }
