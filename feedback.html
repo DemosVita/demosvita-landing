@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Cuéntanos cómo ha ido tu misión de DemosVita.">
+  <title>Reportar misión · DemosVita</title>
+  <link rel="stylesheet" href="misiones.css">
+</head>
+<body class="feedback-page">
+  <header class="site-header">
+    <a class="brand" href="/" aria-label="DemosVita, inicio">
+      <img src="/logo-green.png" alt="" width="52" height="52">
+      <span>DemosVita<b>.</b></span>
+    </a>
+    <nav aria-label="Navegación principal">
+      <a href="/">Inicio</a>
+      <a href="/misiones.html">Misiones</a>
+      <a class="nav-button active" href="/feedback.html">Reportar misión</a>
+    </nav>
+  </header>
+
+  <main class="feedback-main">
+    <section class="feedback-intro">
+      <span class="eyebrow">TU EXPERIENCIA IMPORTA</span>
+      <h1>Cuéntanos cómo<br><em>salió de verdad.</em></h1>
+      <p>No buscamos una historia perfecta. Lo que funcionó, lo que costó y lo que cambiarías nos ayuda a construir DemosVita.</p>
+      <div class="privacy-note">🔒 Tus respuestas solo se utilizarán para mejorar las misiones. No publicaremos tu experiencia sin permiso.</div>
+    </section>
+
+    <section class="form-shell">
+      <div id="mission-summary" class="selected-mission" aria-live="polite"></div>
+
+      <form id="mission-feedback-form" enctype="multipart/form-data">
+        <input type="hidden" name="action" value="missionFeedback">
+        <input type="hidden" id="missionId" name="missionId">
+        <input type="hidden" id="source" name="source">
+        <input type="hidden" id="explorerFromUrl" name="explorerFromUrl">
+        <input type="hidden" id="photoBase64" name="photoBase64">
+        <input type="hidden" id="photoName" name="photoName">
+        <input type="hidden" id="pageUrl" name="pageUrl">
+
+        <fieldset>
+          <legend>1. Tu perfil</legend>
+          <p class="field-help">Esto nos permite asociar la experiencia a tu recorrido.</p>
+          <label class="question">¿Tienes número de Explorador?</label>
+          <div class="choice-grid">
+            <label class="choice"><input type="radio" name="hasExplorer" value="Sí" required><span>Sí, ya tengo uno</span></label>
+            <label class="choice"><input type="radio" name="hasExplorer" value="No" required><span>No, todavía no</span></label>
+          </div>
+          <div id="explorer-field" class="conditional" hidden>
+            <label for="explorerId">Número de Explorador</label>
+            <input id="explorerId" name="explorerId" type="text" inputmode="numeric" autocomplete="off" placeholder="Por ejemplo: 7">
+          </div>
+          <div id="signup-invitation" class="signup-invitation" hidden>
+            <strong>¿Te gustaría conseguir el tuyo?</strong>
+            <p>Regístrate gratis y recibe tu número personal y las próximas misiones por correo.</p>
+            <a href="/#unete">Conseguir mi número de Explorador →</a>
+          </div>
+        </fieldset>
+
+        <fieldset id="experience-fields">
+          <legend>2. La experiencia</legend>
+          <div class="field">
+            <label for="place">¿Dónde lo hiciste?</label>
+            <input id="place" name="place" type="text" required placeholder="Parque, cafetería, una calle de tu ciudad…">
+          </div>
+          <div class="field">
+            <label for="words">¿Qué le dijiste exactamente?</label>
+            <textarea id="words" name="words" rows="4" required placeholder="Cuéntanos el halago con tus propias palabras"></textarea>
+          </div>
+          <div class="field">
+            <label for="reaction">¿Cómo reaccionó?</label>
+            <textarea id="reaction" name="reaction" rows="4" required placeholder="¿Qué dijo? ¿Cómo continuó la conversación?"></textarea>
+          </div>
+          <div class="field two-columns">
+            <div>
+              <label for="difficulty">¿Cómo fue respecto a lo que esperabas?</label>
+              <select id="difficulty" name="difficulty" required>
+                <option value="">Selecciona una opción</option>
+                <option>Mucho más fácil</option><option>Algo más fácil</option><option>Como esperaba</option><option>Algo más difícil</option><option>Mucho más difícil</option>
+              </select>
+            </div>
+            <div>
+              <label for="duration">¿Cuánto duró la conversación?</label>
+              <select id="duration" name="duration" required>
+                <option value="">Selecciona una opción</option>
+                <option>Menos de 1 minuto</option><option>Entre 1 y 5 minutos</option><option>Entre 5 y 15 minutos</option><option>Más de 15 minutos</option>
+              </select>
+            </div>
+          </div>
+          <div class="field two-columns">
+            <div><label for="before">¿Cómo te sentías antes?</label><input id="before" name="before" required placeholder="Nervioso, curioso…"></div>
+            <div><label for="after">¿Y después?</label><input id="after" name="after" required placeholder="Contento, aliviado…"></div>
+          </div>
+          <div class="field">
+            <label for="photo">Foto del sitio <span>(opcional)</span></label>
+            <input id="photo" type="file" accept="image/jpeg,image/png,image/webp">
+            <small>Solo del lugar; evita fotografiar a personas sin su permiso. Máximo 4 MB.</small>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>3. Ayúdanos a mejorar</legend>
+          <div class="field">
+            <label for="improvements">¿Qué cambiarías de esta misión?</label>
+            <textarea id="improvements" name="improvements" rows="3" placeholder="Instrucciones, dificultad, condiciones…"></textarea>
+          </div>
+          <div class="field">
+            <label for="ideas">¿Tienes alguna idea para una futura misión?</label>
+            <textarea id="ideas" name="ideas" rows="3" placeholder="Toda idea es bienvenida"></textarea>
+          </div>
+          <label class="permission"><input type="checkbox" name="sharePermission" value="Sí"><span>Autorizo a DemosVita a compartir mi experiencia de forma anónima. Antes de publicar mi nombre o fotografía deberán pedirme permiso expresamente.</span></label>
+        </fieldset>
+
+        <button class="submit-button" type="submit">Completar misión · +150 XP</button>
+        <p id="form-status" class="form-status" role="status" aria-live="polite"></p>
+      </form>
+
+      <section id="success-screen" class="success-screen" hidden>
+        <div class="success-icon">✓</div>
+        <span class="eyebrow">MISIÓN REPORTADA</span>
+        <h2>Gracias por atreverte.</h2>
+        <p>Tu experiencia ya forma parte del origen de DemosVita.</p>
+        <div class="xp-earned">+150 XP</div>
+        <a class="primary" href="/misiones.html">Descubrir más misiones</a>
+      </section>
+    </section>
+  </main>
+  <script src="feedback.js"></script>
+</body>
+</html>
