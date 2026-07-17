@@ -79,6 +79,9 @@
     <p>The world was always there. Now it’s your turn.</p>
     <small>© 2026 DemosVita · <a href="mailto:info@demosvita.com">info@demosvita.com</a></small>
   </footer>
+  <nav class="mobile-app-nav" aria-label="Navegación móvil">
+    <a href="/"><span>⌂</span>Inicio</a><a class="active" href="/misiones.html"><span>✦</span>Misiones</a><a href="/feedback.html"><span>✓</span>Reportar</a><a href="/proponer-mision.html"><span>＋</span>Proponer</a>
+  </nav>
   <script>
     document.querySelector('[data-copy-url]').addEventListener('click', async function () {
       try { await navigator.clipboard.writeText(this.dataset.copyUrl); this.textContent = 'Enlace copiado ✓'; }

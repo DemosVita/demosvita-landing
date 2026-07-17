@@ -812,6 +812,47 @@ footer {
     color:var(--gold);
 
 }
+
+.mobile-app-nav { display: none; }
+
+@media (max-width: 900px) {
+  body { padding-bottom: 76px; }
+  .mobile-app-nav {
+    position: fixed;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+    height: 64px;
+    padding: 6px;
+    background: rgba(250,249,246,.94);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(35,78,59,.14);
+    border-radius: 20px;
+    box-shadow: 0 14px 45px rgba(31,41,51,.18);
+    z-index: 200;
+  }
+  .mobile-app-nav a {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    padding: 3px;
+    color: var(--muted);
+    font-size: 10px;
+    font-weight: 700;
+    text-decoration: none;
+    opacity: 1;
+  }
+  .mobile-app-nav a span { font-size: 19px; line-height: 1; }
+  .mobile-app-nav a.active {
+    color: var(--forest);
+    background: rgba(35,78,59,.08);
+    border-radius: 14px;
+  }
+}
 </style>
 </head>
 
@@ -1183,6 +1224,12 @@ footer {
     </p>
 
 </footer>
+<nav class="mobile-app-nav" aria-label="Navegación móvil">
+  <a class="active" href="/"><span>⌂</span>Inicio</a>
+  <a href="/misiones.html"><span>✦</span>Misiones</a>
+  <a href="/feedback.html"><span>✓</span>Reportar</a>
+  <a href="/proponer-mision.html"><span>＋</span>Proponer</a>
+</nav>
 <script>
 let submitted = false;
 
