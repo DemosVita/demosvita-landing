@@ -13,7 +13,7 @@
     const session = sessionData.session;
 
     if (sessionError || !session) {
-      location.replace('/acceso.html?returnTo=/cuenta.html');
+      location.replace('acceso.html?returnTo=cuenta.html');
       return;
     }
 
@@ -41,7 +41,7 @@
 
   document.querySelector('#sign-out').addEventListener('click', async () => {
     await client.auth.signOut();
-    location.replace('/acceso.html');
+    location.replace('acceso.html');
   });
 
   function renderProfile(profile, reports, proposalCount) {
@@ -84,4 +84,3 @@
     return String(value).replace(/[&<>'"]/g, character => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' })[character]);
   }
 })();
-
