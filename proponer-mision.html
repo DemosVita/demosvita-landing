@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Propón una nueva misión para la comunidad DemosVita.">
+  <title>Proponer una misión · DemosVita</title>
+  <link rel="stylesheet" href="misiones.css">
+</head>
+<body class="feedback-page">
+  <header class="site-header">
+    <a class="brand" href="/" aria-label="DemosVita, inicio"><img src="/logo-green.png" alt="" width="52" height="52"><span>DemosVita<b>.</b></span></a>
+    <nav aria-label="Navegación principal">
+      <a href="/">Inicio</a><a href="/misiones.html">Misiones</a><a class="nav-button" href="/feedback.html">Reportar misión</a>
+    </nav>
+  </header>
+
+  <main class="feedback-main">
+    <section class="feedback-intro">
+      <span class="eyebrow">CONSTRUYE CON NOSOTROS</span>
+      <h1>¿Cuál sería tu<br><em>próxima misión?</em></h1>
+      <p>Las mejores aventuras pueden nacer de cualquier Explorador. Cuéntanos tu idea; nosotros la revisaremos y podremos convertirla en una misión para toda la comunidad.</p>
+      <div class="privacy-note">💡 No hace falta que esté perfectamente definida. Nos interesa la chispa: qué experiencia provoca y por qué merece la pena vivirla.</div>
+    </section>
+
+    <section class="form-shell">
+      <div class="selected-mission"><span>PROPUESTA DE LA COMUNIDAD</span><strong>Diseña una nueva experiencia</strong></div>
+      <form id="mission-proposal-form">
+        <input type="hidden" name="action" value="missionProposal">
+        <input type="hidden" id="proposalSource" name="source">
+        <input type="hidden" id="proposalExplorerFromUrl" name="explorerFromUrl">
+        <input type="hidden" id="proposalPageUrl" name="pageUrl">
+
+        <fieldset>
+          <legend>1. Sobre ti</legend>
+          <label class="question">¿Tienes número de Explorador?</label>
+          <div class="choice-grid">
+            <label class="choice"><input type="radio" name="hasExplorer" value="Sí" required><span>Sí, ya tengo uno</span></label>
+            <label class="choice"><input type="radio" name="hasExplorer" value="No" required><span>No, todavía no</span></label>
+          </div>
+          <div id="proposal-explorer-field" class="conditional" hidden><label for="proposalExplorerId">Número de Explorador</label><input id="proposalExplorerId" name="explorerId" inputmode="numeric" placeholder="Por ejemplo: 7"></div>
+          <div id="proposal-signup" class="signup-invitation" hidden><strong>¿Quieres formar parte de la comunidad?</strong><p>Regístrate gratis y consigue tu número personal de Explorador.</p><a href="/#unete">Conseguir mi número →</a></div>
+          <div class="field"><label for="proposalEmail">Correo electrónico <span>(opcional)</span></label><input id="proposalEmail" name="email" type="email" placeholder="Solo si quieres que te contactemos sobre la propuesta"></div>
+        </fieldset>
+
+        <fieldset>
+          <legend>2. Tu misión</legend>
+          <div class="field"><label for="proposalTitle">¿Cómo la llamarías?</label><input id="proposalTitle" name="title" required maxlength="100" placeholder="Un título breve y memorable"></div>
+          <div class="field"><label for="proposalCategory">¿Qué tipo de experiencia es?</label><select id="proposalCategory" name="category" required><option value="">Selecciona una categoría</option><option>🤝 Conecta · Conexión social</option><option>🧭 Explora · Cultura y ciudad</option><option>🌿 Muévete · Naturaleza y movimiento</option><option>💡 Descubre · Curiosidad y aprendizaje</option><option>👁️ Contempla · Introspección y crecimiento</option><option>Otra</option></select></div>
+          <div class="field"><label for="proposalAction">¿Qué tendría que hacer el Explorador?</label><textarea id="proposalAction" name="actionDescription" rows="4" required placeholder="Describe la acción principal de forma sencilla"></textarea></div>
+          <div class="field"><label for="proposalPurpose">¿Qué experiencia quieres provocar?</label><textarea id="proposalPurpose" name="purpose" rows="3" required placeholder="Conocer a alguien, descubrir un lugar, vencer una barrera…"></textarea></div>
+          <div class="field"><label for="proposalConditions">¿Añadirías alguna condición?</label><textarea id="proposalConditions" name="conditions" rows="3" placeholder="Lugar, duración, dificultad adicional…"></textarea></div>
+          <div class="field two-columns">
+            <div><label for="proposalDifficulty">Dificultad aproximada</label><select id="proposalDifficulty" name="difficulty" required><option value="">Selecciona</option><option>Fácil</option><option>Media</option><option>Difícil</option><option>Épica</option></select></div>
+            <div><label for="proposalDuration">Tiempo aproximado</label><select id="proposalDuration" name="duration" required><option value="">Selecciona</option><option>Menos de 15 minutos</option><option>15-30 minutos</option><option>30-60 minutos</option><option>Más de una hora</option><option>Varios días</option></select></div>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>3. La chispa</legend>
+          <div class="field"><label for="proposalWhy">¿Por qué crees que esta misión merece existir?</label><textarea id="proposalWhy" name="why" rows="4" required placeholder="Qué puede aportar a quien se atreva a realizarla"></textarea></div>
+          <label class="permission"><input type="checkbox" name="contactPermission" value="Sí"><span>Podéis contactar conmigo para desarrollar esta idea y reconocerme como autor/a si finalmente se publica.</span></label>
+        </fieldset>
+
+        <button class="submit-button" type="submit">Enviar propuesta</button>
+        <p id="proposal-status" class="form-status" role="status" aria-live="polite"></p>
+      </form>
+
+      <section id="proposal-success" class="success-screen" hidden>
+        <div class="success-icon">✓</div><span class="eyebrow">PROPUESTA RECIBIDA</span><h2>La aventura también la construyes tú.</h2><p>Revisaremos tu idea y podremos convertirla en una futura misión de DemosVita.</p><a class="primary" href="/misiones.html">Volver a las misiones</a>
+      </section>
+    </section>
+  </main>
+  <script src="propuesta.js"></script>
+</body>
+</html>

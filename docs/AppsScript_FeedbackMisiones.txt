@@ -13,6 +13,7 @@ const FEEDBACK_CONFIG = Object.freeze({
   // El ID sería: 1AbCdEfGhIjKlMnOpQrStUvWxYz
   spreadsheetId: 'PON_AQUI_ID_GOOGLE_SHEET',
   sheetName: 'Feedback misiones',
+  proposalSheetName: 'Propuestas misiones',
   photoFolderName: 'DemosVita - Fotos feedback'
 });
 
@@ -21,6 +22,9 @@ function doPost(e) {
   lock.waitLock(30000);
   try {
     const p = (e && e.parameter) || {};
+    if (p.action === 'missionProposal') {
+      return saveMissionProposal_(p);
+    }
     if (p.action !== 'missionFeedback') {
       return jsonFeedback_({ ok: false, error: 'Acción no válida' });
     }
@@ -58,6 +62,29 @@ function doPost(e) {
   }
 }
 
+function saveMissionProposal_(p) {
+  const sheet = getProposalSheet_();
+  sheet.appendRow([
+    new Date(),
+    cleanFeedback_(p.source),
+    cleanFeedback_(p.explorerId || p.explorerFromUrl),
+    cleanFeedback_(p.hasExplorer),
+    cleanFeedback_(p.email),
+    cleanFeedback_(p.title),
+    cleanFeedback_(p.category),
+    cleanFeedback_(p.actionDescription),
+    cleanFeedback_(p.purpose),
+    cleanFeedback_(p.conditions),
+    cleanFeedback_(p.difficulty),
+    cleanFeedback_(p.duration),
+    cleanFeedback_(p.why),
+    cleanFeedback_(p.contactPermission || 'No'),
+    cleanFeedback_(p.pageUrl),
+    'PENDIENTE'
+  ]);
+  return jsonFeedback_({ ok: true, type: 'missionProposal' });
+}
+
 function getFeedbackSheet_() {
   if (!FEEDBACK_CONFIG.spreadsheetId ||
       FEEDBACK_CONFIG.spreadsheetId === 'PON_AQUI_ID_GOOGLE_SHEET') {
@@ -87,6 +114,41 @@ function getFeedbackSheet_() {
       'Ideas',
       'Permiso anónimo',
       'URL de entrada'
+    ]);
+    sheet.setFrozenRows(1);
+  }
+
+  return sheet;
+}
+
+function getProposalSheet_() {
+  if (!FEEDBACK_CONFIG.spreadsheetId ||
+      FEEDBACK_CONFIG.spreadsheetId === 'PON_AQUI_ID_GOOGLE_SHEET') {
+    throw new Error('Falta configurar spreadsheetId con el identificador de Google Sheets.');
+  }
+
+  const ss = SpreadsheetApp.openById(FEEDBACK_CONFIG.spreadsheetId);
+  let sheet = ss.getSheetByName(FEEDBACK_CONFIG.proposalSheetName);
+
+  if (!sheet) {
+    sheet = ss.insertSheet(FEEDBACK_CONFIG.proposalSheetName);
+    sheet.appendRow([
+      'Fecha',
+      'Origen',
+      'ID explorador',
+      'Tiene ID',
+      'Email',
+      'Título',
+      'Categoría',
+      'Acción propuesta',
+      'Objetivo',
+      'Condiciones',
+      'Dificultad',
+      'Duración',
+      'Por qué debe existir',
+      'Permiso de contacto',
+      'URL de entrada',
+      'Estado'
     ]);
     sheet.setFrozenRows(1);
   }
@@ -132,6 +194,8 @@ function jsonFeedback_(data) {
  */
 function probarConexionConSheet() {
   const sheet = getFeedbackSheet_();
+  const proposalSheet = getProposalSheet_();
   console.log('Conexión correcta con: ' + sheet.getParent().getName());
   console.log('Pestaña preparada: ' + sheet.getName());
+  console.log('Pestaña preparada: ' + proposalSheet.getName());
 }
