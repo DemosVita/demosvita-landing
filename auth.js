@@ -43,7 +43,25 @@
     activeEmail = emailInput.value.trim().toLowerCase();
     activeArchetype = '';
     authMode = 'login';
-    await sendCode(activeEmail, emailForm.querySelector('button'), false);
+    const button = emailForm.querySelector('button');
+    setBusy(button, true, 'Comprobando…');
+    showStatus('');
+
+    try {
+      const accountStatus = await getEmailAccountStatus(activeEmail);
+      if (accountStatus === 'unregistered' || accountStatus === 'invalid') {
+        setBusy(button, false, 'Recibir mi código');
+        showStatus('Este correo no está registrado. Regístrate para conseguir tu número de Explorador.', true);
+        return;
+      }
+      // Una cuenta activa inicia sesión. Un fundador pendiente crea por primera
+      // vez su usuario Auth y el trigger conserva su número histórico.
+      await sendCode(activeEmail, button, accountStatus === 'founder_pending');
+    } catch (error) {
+      setBusy(button, false, 'Recibir mi código');
+      showStatus('No hemos podido comprobar el correo. Inténtalo de nuevo.', true);
+      console.error(error);
+    }
   });
 
   registrationForm.addEventListener('submit', async event => {
@@ -141,6 +159,14 @@
     );
   }
 
+  async function getEmailAccountStatus(email) {
+    const { data, error } = await client.rpc('get_email_account_status', {
+      candidate_email: email
+    });
+    if (error) throw error;
+    return data;
+  }
+
   function showCodeStep(email) {
     emailStep.hidden = true;
     registrationStep.hidden = true;
@@ -204,4 +230,3 @@
       : 'No existe una cuenta activa con ese correo. Regístrate para conseguir tu número.';
   }
 })();
-
