@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Accede a tu cuenta de Explorador DemosVita.">
+  <title>Acceso de Exploradores · DemosVita</title>
+  <link rel="stylesheet" href="misiones.css">
+  <link rel="stylesheet" href="cuenta.css">
+</head>
+<body class="account-page">
+  <header class="site-header">
+    <a class="brand" href="/" aria-label="DemosVita, inicio">
+      <img src="/logo-green.png" alt="" width="52" height="52">
+      <span>DemosVita<b>.</b></span>
+    </a>
+    <nav aria-label="Navegación principal">
+      <a href="/">Inicio</a>
+      <a href="/misiones.html">Misiones</a>
+      <a class="nav-button active" href="/acceso.html">Mi cuenta</a>
+    </nav>
+  </header>
+
+  <main class="access-main">
+    <section class="access-copy">
+      <span class="eyebrow">ACCESO DE EXPLORADORES</span>
+      <h1>Tu aventura,<br><em>en un solo lugar.</em></h1>
+      <p>Consulta tu número de Explorador, tus XP y el histórico de misiones realizadas.</p>
+      <div class="privacy-note">🔐 No necesitas recordar una contraseña. Te enviaremos un código temporal de seis cifras.</div>
+    </section>
+
+    <section class="access-card" aria-labelledby="access-title">
+      <img class="access-logo" src="/logo-green.png" alt="DemosVita" width="72" height="72">
+
+      <div id="email-step">
+        <span class="eyebrow">ENTRAR O REGISTRARME</span>
+        <h2 id="access-title">¿Cuál es tu correo?</h2>
+        <p>Si ya tenías número de Explorador, utiliza el mismo correo con el que te registraste.</p>
+        <form id="email-form" class="access-form">
+          <label for="access-email">Correo electrónico</label>
+          <input id="access-email" name="email" type="email" autocomplete="email" required placeholder="tu@email.com">
+          <button class="submit-button" type="submit">Recibir mi código</button>
+        </form>
+      </div>
+
+      <div id="code-step" hidden>
+        <span class="eyebrow">REVISA TU CORREO</span>
+        <h2>Introduce el código</h2>
+        <p>Hemos enviado seis cifras a <strong id="sent-email"></strong>.</p>
+        <form id="code-form" class="access-form">
+          <label for="access-code">Código de seis cifras</label>
+          <input id="access-code" name="code" class="otp-input" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]{6}" maxlength="6" required placeholder="000000">
+          <button class="submit-button" type="submit">Entrar en mi cuenta</button>
+        </form>
+        <div class="access-links">
+          <button id="change-email" class="text-button" type="button">Cambiar correo</button>
+          <button id="resend-code" class="text-button" type="button">Reenviar código</button>
+        </div>
+      </div>
+
+      <p id="access-status" class="form-status" role="status" aria-live="polite"></p>
+    </section>
+  </main>
+
+  <nav class="mobile-app-nav" aria-label="Navegación móvil">
+    <a href="/"><span>⌂</span>Inicio</a>
+    <a href="/misiones.html"><span>✦</span>Misiones</a>
+    <a href="/feedback.html"><span>✓</span>Reportar</a>
+    <a class="active" href="/acceso.html"><span>●</span>Cuenta</a>
+  </nav>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
+  <script src="auth.js"></script>
+</body>
+</html>
+
