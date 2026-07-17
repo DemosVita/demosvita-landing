@@ -43,7 +43,16 @@
       loading.hidden = true;
       errorBox.hidden = false;
       const reference = error && error.code ? ` (${error.code})` : '';
-      errorBox.textContent = `Tu acceso es correcto, pero no hemos podido encontrar el perfil asociado${reference}.`;
+      errorBox.textContent = `Tu acceso es correcto, pero no hemos podido encontrar el perfil asociado${reference}. `;
+      const restartButton = document.createElement('button');
+      restartButton.type = 'button';
+      restartButton.className = 'primary account-restart';
+      restartButton.textContent = 'Volver al registro';
+      restartButton.addEventListener('click', async () => {
+        await client.auth.signOut();
+        location.replace('acceso.html');
+      });
+      errorBox.appendChild(restartButton);
       console.error(error);
     }
   }
