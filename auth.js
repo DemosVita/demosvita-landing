@@ -3,17 +3,28 @@
 
   const client = window.demosVitaSupabase;
   const emailStep = document.querySelector('#email-step');
+  const registrationStep = document.querySelector('#registration-step');
   const codeStep = document.querySelector('#code-step');
   const emailForm = document.querySelector('#email-form');
+  const registrationForm = document.querySelector('#registration-form');
   const codeForm = document.querySelector('#code-form');
   const emailInput = document.querySelector('#access-email');
+  const registrationEmail = document.querySelector('#registration-email');
+  const registrationArchetype = document.querySelector('#registration-archetype');
   const codeInput = document.querySelector('#access-code');
   const sentEmail = document.querySelector('#sent-email');
   const status = document.querySelector('#access-status');
   const changeEmail = document.querySelector('#change-email');
   const resendCode = document.querySelector('#resend-code');
+  const openRegistration = document.querySelector('#open-registration');
+  const backToLogin = document.querySelector('#back-to-login');
+  const registerFromCode = document.querySelector('#register-from-code');
+  const codeRegistrationInvitation = document.querySelector('#code-registration-invitation');
   const params = new URLSearchParams(location.search);
+
   let activeEmail = sessionStorage.getItem('demosvita-auth-email') || '';
+  let authMode = sessionStorage.getItem('demosvita-auth-mode') || 'login';
+  let activeArchetype = sessionStorage.getItem('demosvita-auth-archetype') || '';
 
   init();
 
@@ -30,7 +41,18 @@
     event.preventDefault();
     if (!emailForm.reportValidity()) return;
     activeEmail = emailInput.value.trim().toLowerCase();
-    await sendCode(activeEmail, emailForm.querySelector('button'));
+    activeArchetype = '';
+    authMode = 'login';
+    await sendCode(activeEmail, emailForm.querySelector('button'), false);
+  });
+
+  registrationForm.addEventListener('submit', async event => {
+    event.preventDefault();
+    if (!registrationForm.reportValidity()) return;
+    activeEmail = registrationEmail.value.trim().toLowerCase();
+    activeArchetype = registrationArchetype.value;
+    authMode = 'register';
+    await sendCode(activeEmail, registrationForm.querySelector('button'), true, activeArchetype);
   });
 
   codeForm.addEventListener('submit', async event => {
@@ -57,52 +79,91 @@
       return;
     }
 
-    sessionStorage.removeItem('demosvita-auth-email');
+    clearPendingAuth();
     showStatus('Acceso correcto. Preparando tu cuenta…');
     location.replace(getReturnUrl());
   });
 
   changeEmail.addEventListener('click', () => {
+    clearPendingAuth();
     activeEmail = '';
-    sessionStorage.removeItem('demosvita-auth-email');
+    activeArchetype = '';
+    authMode = 'login';
     codeInput.value = '';
     codeStep.hidden = true;
+    registrationStep.hidden = true;
     emailStep.hidden = false;
     showStatus('');
     emailInput.focus();
   });
 
   resendCode.addEventListener('click', async () => {
-    await sendCode(activeEmail, resendCode);
+    await sendCode(activeEmail, resendCode, authMode === 'register', activeArchetype);
   });
 
-  async function sendCode(email, button) {
+  openRegistration.addEventListener('click', () => showRegistrationStep(emailInput.value));
+  registerFromCode.addEventListener('click', () => showRegistrationStep(activeEmail));
+  backToLogin.addEventListener('click', () => {
+    registrationStep.hidden = true;
+    codeStep.hidden = true;
+    emailStep.hidden = false;
+    emailInput.value = registrationEmail.value;
+    showStatus('');
+    emailInput.focus();
+  });
+
+  async function sendCode(email, button, shouldCreateUser, archetype = '') {
     if (!email) return;
     setBusy(button, true, 'Enviando…');
     showStatus('');
 
-    const { error } = await client.auth.signInWithOtp({
-      email,
-      options: { shouldCreateUser: true }
-    });
+    const options = { shouldCreateUser };
+    if (shouldCreateUser) options.data = { archetype };
+
+    const { error } = await client.auth.signInWithOtp({ email, options });
 
     if (error) {
-      setBusy(button, false, button === resendCode ? 'Reenviar código' : 'Recibir mi código');
-      showStatus(humanizeError(error), true);
+      setBusy(button, false, buttonLabel(button, shouldCreateUser));
+      showStatus(humanizeError(error, shouldCreateUser), true);
       return;
     }
 
+    authMode = shouldCreateUser ? 'register' : 'login';
     sessionStorage.setItem('demosvita-auth-email', email);
-    setBusy(button, false, button === resendCode ? 'Reenviar código' : 'Recibir mi código');
+    sessionStorage.setItem('demosvita-auth-mode', authMode);
+    if (archetype) sessionStorage.setItem('demosvita-auth-archetype', archetype);
+    setBusy(button, false, buttonLabel(button, shouldCreateUser));
     showCodeStep(email);
-    showStatus(button === resendCode ? 'Te hemos enviado un código nuevo.' : 'Código enviado. Puede tardar unos segundos.');
+    showStatus(
+      shouldCreateUser
+        ? 'Cuenta preparada. Revisa tu correo para confirmar el registro.'
+        : 'Si el correo tiene una cuenta activa, recibirás un código en unos segundos.'
+    );
   }
 
   function showCodeStep(email) {
     emailStep.hidden = true;
+    registrationStep.hidden = true;
     codeStep.hidden = false;
+    codeRegistrationInvitation.hidden = authMode === 'register';
     sentEmail.textContent = email;
     setTimeout(() => codeInput.focus(), 50);
+  }
+
+  function showRegistrationStep(email = '') {
+    authMode = 'register';
+    emailStep.hidden = true;
+    codeStep.hidden = true;
+    registrationStep.hidden = false;
+    registrationEmail.value = String(email || activeEmail || '').trim().toLowerCase();
+    showStatus('');
+    (registrationEmail.value ? registrationArchetype : registrationEmail).focus();
+  }
+
+  function clearPendingAuth() {
+    sessionStorage.removeItem('demosvita-auth-email');
+    sessionStorage.removeItem('demosvita-auth-mode');
+    sessionStorage.removeItem('demosvita-auth-archetype');
   }
 
   function getReturnUrl() {
@@ -115,6 +176,11 @@
     }
   }
 
+  function buttonLabel(button, shouldCreateUser) {
+    if (button === resendCode) return 'Reenviar código';
+    return shouldCreateUser ? 'Crear mi cuenta' : 'Recibir mi código';
+  }
+
   function setBusy(button, busy, label) {
     button.disabled = busy;
     button.textContent = label;
@@ -125,10 +191,17 @@
     status.classList.toggle('is-error', isError);
   }
 
-  function humanizeError(error) {
-    if (String(error.message).toLowerCase().includes('rate')) {
+  function humanizeError(error, isRegistration) {
+    const message = String(error.message || '').toLowerCase();
+    if (message.includes('rate')) {
       return 'Has pedido varios códigos seguidos. Espera un minuto y vuelve a intentarlo.';
     }
-    return 'No hemos podido enviar el código. Revisa el correo e inténtalo de nuevo.';
+    if (isRegistration && (message.includes('already') || message.includes('registered'))) {
+      return 'Ese correo ya tiene una cuenta. Vuelve atrás y entra con tu código.';
+    }
+    return isRegistration
+      ? 'No hemos podido crear la cuenta. Revisa los datos e inténtalo de nuevo.'
+      : 'No existe una cuenta activa con ese correo. Regístrate para conseguir tu número.';
   }
 })();
+
