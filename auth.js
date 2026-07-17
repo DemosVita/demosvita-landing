@@ -97,6 +97,20 @@
       return;
     }
 
+    if (authMode === 'register') {
+      showStatus('Correo verificado. Creando tu perfil de Explorador…');
+      const { error: profileError } = await client.rpc('ensure_my_profile', {
+        chosen_archetype: activeArchetype || null
+      });
+      if (profileError) {
+        await client.auth.signOut();
+        setBusy(button, false, 'Entrar en mi cuenta');
+        showStatus('El correo se ha verificado, pero no hemos podido crear el perfil. Solicita un código nuevo para reintentarlo.', true);
+        console.error(profileError);
+        return;
+      }
+    }
+
     clearPendingAuth();
     showStatus('Acceso correcto. Preparando tu cuenta…');
     location.replace(getReturnUrl());
