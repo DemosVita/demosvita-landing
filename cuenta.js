@@ -18,25 +18,50 @@
     }
 
     try {
-      const [profileResult, reportsResult, proposalsResult] = await Promise.all([
-        client.from('profiles').select('email,explorer_number,archetype,total_xp,level,is_founder').eq('user_id', session.user.id).single(),
+      const profileResult = await loadProfile(session.user.id);
+      if (profileResult.error) throw profileResult.error;
+      if (!profileResult.data) throw { code: 'PROFILE_NOT_FOUND', message: 'No existe el perfil vinculado' };
+
+      const [reportsResult, proposalsResult] = await Promise.all([
         client.from('mission_reports').select('id,created_at,xp_awarded,status,missions(title,category,code)').order('created_at', { ascending: false }),
         client.from('mission_proposals').select('id', { count: 'exact', head: true })
       ]);
 
-      if (profileResult.error) throw profileResult.error;
-      if (reportsResult.error) throw reportsResult.error;
-      if (proposalsResult.error) throw proposalsResult.error;
+      // El perfil es esencial. El histórico y las propuestas son secundarios:
+      // si una de esas consultas falla, la cuenta sigue siendo utilizable.
+      if (reportsResult.error) console.warn('No se pudo cargar el histórico', reportsResult.error);
+      if (proposalsResult.error) console.warn('No se pudieron cargar las propuestas', proposalsResult.error);
 
-      renderProfile(profileResult.data, reportsResult.data || [], proposalsResult.count || 0);
+      renderProfile(
+        profileResult.data,
+        reportsResult.error ? [] : (reportsResult.data || []),
+        proposalsResult.error ? 0 : (proposalsResult.count || 0)
+      );
       loading.hidden = true;
       content.hidden = false;
     } catch (error) {
       loading.hidden = true;
       errorBox.hidden = false;
-      errorBox.textContent = 'No hemos podido cargar tu cuenta. Recarga la página en unos segundos.';
+      const reference = error && error.code ? ` (${error.code})` : '';
+      errorBox.textContent = `Tu acceso es correcto, pero no hemos podido encontrar el perfil asociado${reference}.`;
       console.error(error);
     }
+  }
+
+  async function loadProfile(userId) {
+    let result;
+    // Tras el primer registro, el trigger puede necesitar un instante para
+    // dejar disponible el perfil al cliente.
+    for (let attempt = 0; attempt < 3; attempt += 1) {
+      result = await client
+        .from('profiles')
+        .select('email,explorer_number,archetype,total_xp,level,is_founder')
+        .eq('user_id', userId)
+        .maybeSingle();
+      if (result.error || result.data) return result;
+      await new Promise(resolve => setTimeout(resolve, 500));
+    }
+    return result;
   }
 
   document.querySelector('#sign-out').addEventListener('click', async () => {
