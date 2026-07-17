@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Tu perfil, progreso e histórico de misiones DemosVita.">
+  <title>Mi cuenta · DemosVita</title>
+  <link rel="stylesheet" href="misiones.css">
+  <link rel="stylesheet" href="cuenta.css">
+</head>
+<body class="account-page">
+  <header class="site-header">
+    <a class="brand" href="/" aria-label="DemosVita, inicio">
+      <img src="/logo-green.png" alt="" width="52" height="52">
+      <span>DemosVita<b>.</b></span>
+    </a>
+    <nav aria-label="Navegación principal">
+      <a href="/">Inicio</a>
+      <a href="/misiones.html">Misiones</a>
+      <a class="nav-button active" href="/cuenta.html">Mi cuenta</a>
+    </nav>
+  </header>
+
+  <main class="dashboard-main">
+    <div id="account-loading" class="account-loading">Preparando tu cuaderno de Explorador…</div>
+
+    <div id="account-content" hidden>
+      <section class="profile-hero">
+        <div>
+          <span class="eyebrow">MI CUENTA DEMOSVITA</span>
+          <h1>Explorador <em id="explorer-number">—</em></h1>
+          <p id="profile-email"></p>
+        </div>
+        <div class="profile-actions">
+          <a class="primary" href="/misiones.html">Ver misiones</a>
+          <button id="sign-out" class="text-button" type="button">Cerrar sesión</button>
+        </div>
+      </section>
+
+      <section class="stats-grid" aria-label="Estadísticas del Explorador">
+        <article class="stat-card"><span>PERFIL</span><strong id="profile-archetype">—</strong><small>Tu forma de vivir la aventura</small></article>
+        <article class="stat-card"><span>NIVEL</span><strong id="profile-level">1</strong><small id="level-progress">0 / 500 XP</small></article>
+        <article class="stat-card"><span>EXPERIENCIA</span><strong><b id="profile-xp">0</b> XP</strong><small>Ganados completando misiones</small></article>
+        <article class="stat-card"><span>MISIONES</span><strong id="report-count">0</strong><small>Experiencias reportadas</small></article>
+      </section>
+
+      <section class="history-section">
+        <div class="section-heading">
+          <div><span class="eyebrow">TU RECORRIDO</span><h2>Histórico de misiones</h2></div>
+          <a href="/feedback.html">Reportar una misión →</a>
+        </div>
+        <div id="history-list" class="history-list"></div>
+        <div id="empty-history" class="empty-history" hidden>
+          <span>✦</span>
+          <h3>Tu historia empieza con una misión.</h3>
+          <p>Cuando reportes la primera experiencia, aparecerá aquí junto con los XP conseguidos.</p>
+          <a class="primary" href="/misiones.html">Elegir mi primera misión</a>
+        </div>
+      </section>
+
+      <section class="proposal-summary">
+        <div><span class="eyebrow">CONSTRUYE LA COMUNIDAD</span><h2>Tus propuestas</h2><p>Ideas de misiones que has enviado a DemosVita.</p></div>
+        <div class="proposal-count"><strong id="proposal-count">0</strong><span>propuestas enviadas</span></div>
+        <a class="primary" href="/proponer-mision.html">Proponer misión</a>
+      </section>
+    </div>
+
+    <p id="account-error" class="account-error" role="alert" hidden></p>
+  </main>
+
+  <nav class="mobile-app-nav" aria-label="Navegación móvil">
+    <a href="/"><span>⌂</span>Inicio</a>
+    <a href="/misiones.html"><span>✦</span>Misiones</a>
+    <a href="/feedback.html"><span>✓</span>Reportar</a>
+    <a class="active" href="/cuenta.html"><span>●</span>Cuenta</a>
+  </nav>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
+  <script src="cuenta.js"></script>
+</body>
+</html>
+
