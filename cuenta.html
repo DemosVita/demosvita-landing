@@ -10,14 +10,14 @@
 </head>
 <body class="account-page">
   <header class="site-header">
-    <a class="brand" href="/" aria-label="DemosVita, inicio">
-      <img src="/logo-green.png" alt="" width="52" height="52">
+    <a class="brand" href="index.html" aria-label="DemosVita, inicio">
+      <img src="logo-green.png" alt="" width="52" height="52">
       <span>DemosVita<b>.</b></span>
     </a>
     <nav aria-label="Navegación principal">
-      <a href="/">Inicio</a>
-      <a href="/misiones.html">Misiones</a>
-      <a class="nav-button active" href="/cuenta.html">Mi cuenta</a>
+      <a href="index.html">Inicio</a>
+      <a href="misiones.html">Misiones</a>
+      <a class="nav-button active" href="cuenta.html">Mi cuenta</a>
     </nav>
   </header>
 
@@ -32,7 +32,7 @@
           <p id="profile-email"></p>
         </div>
         <div class="profile-actions">
-          <a class="primary" href="/misiones.html">Ver misiones</a>
+          <a class="primary" href="misiones.html">Ver misiones</a>
           <button id="sign-out" class="text-button" type="button">Cerrar sesión</button>
         </div>
       </section>
@@ -47,21 +47,21 @@
       <section class="history-section">
         <div class="section-heading">
           <div><span class="eyebrow">TU RECORRIDO</span><h2>Histórico de misiones</h2></div>
-          <a href="/feedback.html">Reportar una misión →</a>
+          <a href="feedback.html">Reportar una misión →</a>
         </div>
         <div id="history-list" class="history-list"></div>
         <div id="empty-history" class="empty-history" hidden>
           <span>✦</span>
           <h3>Tu historia empieza con una misión.</h3>
           <p>Cuando reportes la primera experiencia, aparecerá aquí junto con los XP conseguidos.</p>
-          <a class="primary" href="/misiones.html">Elegir mi primera misión</a>
+          <a class="primary" href="misiones.html">Elegir mi primera misión</a>
         </div>
       </section>
 
       <section class="proposal-summary">
         <div><span class="eyebrow">CONSTRUYE LA COMUNIDAD</span><h2>Tus propuestas</h2><p>Ideas de misiones que has enviado a DemosVita.</p></div>
         <div class="proposal-count"><strong id="proposal-count">0</strong><span>propuestas enviadas</span></div>
-        <a class="primary" href="/proponer-mision.html">Proponer misión</a>
+        <a class="primary" href="proponer-mision.html">Proponer misión</a>
       </section>
     </div>
 
@@ -69,10 +69,10 @@
   </main>
 
   <nav class="mobile-app-nav" aria-label="Navegación móvil">
-    <a href="/"><span>⌂</span>Inicio</a>
-    <a href="/misiones.html"><span>✦</span>Misiones</a>
-    <a href="/feedback.html"><span>✓</span>Reportar</a>
-    <a class="active" href="/cuenta.html"><span>●</span>Cuenta</a>
+    <a href="index.html"><span>⌂</span>Inicio</a>
+    <a href="misiones.html"><span>✦</span>Misiones</a>
+    <a href="feedback.html"><span>✓</span>Reportar</a>
+    <a class="active" href="cuenta.html"><span>●</span>Cuenta</a>
   </nav>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -80,4 +80,3 @@
   <script src="cuenta.js"></script>
 </body>
 </html>
-
