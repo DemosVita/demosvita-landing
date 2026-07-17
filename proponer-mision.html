@@ -31,21 +31,13 @@
     <section class="form-shell">
       <div class="selected-mission"><span>PROPUESTA DE LA COMUNIDAD</span><strong>Diseña una nueva experiencia</strong></div>
       <form id="mission-proposal-form">
-        <input type="hidden" name="action" value="missionProposal">
-        <input type="hidden" id="proposalSource" name="source">
-        <input type="hidden" id="proposalExplorerFromUrl" name="explorerFromUrl">
-        <input type="hidden" id="proposalPageUrl" name="pageUrl">
-
         <fieldset>
-          <legend>1. Sobre ti</legend>
-          <label class="question">¿Tienes número de Explorador?</label>
-          <div class="choice-grid">
-            <label class="choice"><input type="radio" name="hasExplorer" value="Sí" required><span>Sí, ya tengo uno</span></label>
-            <label class="choice"><input type="radio" name="hasExplorer" value="No" required><span>No, todavía no</span></label>
+          <legend>1. Tu cuenta</legend>
+          <p class="field-help">La propuesta quedará asociada automáticamente a tu perfil.</p>
+          <div class="signup-invitation" aria-live="polite">
+            <strong id="proposal-profile-name">Preparando tu perfil de Explorador…</strong>
+            <p id="proposal-profile-email"></p>
           </div>
-          <div id="proposal-explorer-field" class="conditional" hidden><label for="proposalExplorerId">Número de Explorador</label><input id="proposalExplorerId" name="explorerId" inputmode="numeric" placeholder="Por ejemplo: 7"></div>
-          <div id="proposal-signup" class="signup-invitation" hidden><strong>¿Quieres formar parte de la comunidad?</strong><p>Regístrate gratis y consigue tu número personal de Explorador.</p><a href="/#unete">Conseguir mi número →</a></div>
-          <div class="field"><label for="proposalEmail">Correo electrónico <span>(opcional)</span></label><input id="proposalEmail" name="email" type="email" placeholder="Solo si quieres que te contactemos sobre la propuesta"></div>
         </fieldset>
 
         <fieldset>
@@ -79,6 +71,6 @@
   <nav class="mobile-app-nav" aria-label="Navegación móvil">
     <a href="/"><span>⌂</span>Inicio</a><a href="/misiones.html"><span>✦</span>Misiones</a><a href="/feedback.html"><span>✓</span>Reportar</a><a class="active" href="/proponer-mision.html"><span>＋</span>Proponer</a>
   </nav>
-  <script src="propuesta.js"></script>
+  <script defer src="propuesta.js"></script>
 </body>
 </html>
