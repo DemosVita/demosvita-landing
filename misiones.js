@@ -62,6 +62,15 @@
     return media;
   }
 
+  function buildVisual(mission) {
+    const visual = element('div', 'mission-visual');
+    visual.append(buildMedia(mission));
+    if (mission.tagline) {
+      visual.append(element('p', 'mission-motto', mission.tagline));
+    }
+    return visual;
+  }
+
   function buildConditions(mission) {
     const values = Array.isArray(mission.conditions) ? mission.conditions.filter(Boolean) : [];
     if (!values.length && !mission.feedback_prompt) return null;
@@ -86,7 +95,7 @@
     const card = element('article', 'mission-card');
     card.id = mission.slug;
     card.dataset.category = mission.category;
-    card.append(buildMedia(mission));
+    card.append(buildVisual(mission));
 
     const content = element('div', 'mission-content');
     const meta = element('div', 'mission-meta');
@@ -96,9 +105,6 @@
     );
     content.append(meta, element('h3', '', mission.title));
 
-    if (mission.tagline) {
-      content.append(element('blockquote', '', `“${mission.tagline}”`));
-    }
     content.append(element('p', 'mission-description', mission.description));
 
     const conditions = buildConditions(mission);
@@ -156,7 +162,7 @@
   }
 
   async function fetchMissions() {
-    const fields = 'code,slug,title,tagline,description,category,difficulty,xp,conditions,feedback_prompt,image_url,sort_order,published_at';
+    const fields = 'code,catalog_id,slug,title,tagline,description,category,difficulty,xp,conditions,feedback_prompt,feedback_questions,image_url,sort_order,published_at';
     let response = await client
       .from('missions')
       .select(fields)
@@ -166,7 +172,7 @@
 
     // Compatibilidad durante el despliegue: la web sigue mostrando la misión
     // existente aunque la migración de las nuevas columnas aún no se haya ejecutado.
-    if (response.error && /feedback_prompt|sort_order/i.test(response.error.message || '')) {
+    if (response.error && /catalog_id|feedback_prompt|feedback_questions|sort_order/i.test(response.error.message || '')) {
       response = await client
         .from('missions')
         .select('code,slug,title,tagline,description,category,difficulty,xp,conditions,image_url,published_at')
