@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="description" content="Cuéntanos cómo ha ido tu misión de DemosVita.">
   <title>Reportar misión · DemosVita</title>
-  <link rel="stylesheet" href="misiones.css">
+  <link rel="stylesheet" href="misiones.css?v=20260718-3">
   <style>html.auth-pending body{visibility:hidden}.guard-error{min-height:100vh;display:grid;place-content:center;gap:18px;text-align:center;padding:30px}.guard-error img{margin:auto}.guard-error a{color:#234E3B;font-weight:800}</style>
   <script>document.documentElement.classList.add('auth-pending')</script>
   <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -48,43 +48,8 @@
 
         <fieldset id="experience-fields">
           <legend>2. La experiencia</legend>
-          <div class="field">
-            <label for="place">¿Dónde lo hiciste?</label>
-            <input id="place" name="place" type="text" required placeholder="Parque, cafetería, una calle de tu ciudad…">
-          </div>
-          <div class="field">
-            <label for="words">¿Qué le dijiste exactamente?</label>
-            <textarea id="words" name="words" rows="4" required placeholder="Cuéntanos el halago con tus propias palabras"></textarea>
-          </div>
-          <div class="field">
-            <label for="reaction">¿Cómo reaccionó?</label>
-            <textarea id="reaction" name="reaction" rows="4" required placeholder="¿Qué dijo? ¿Cómo continuó la conversación?"></textarea>
-          </div>
-          <div class="field two-columns">
-            <div>
-              <label for="difficulty">¿Cómo fue respecto a lo que esperabas?</label>
-              <select id="difficulty" name="difficulty" required>
-                <option value="">Selecciona una opción</option>
-                <option>Mucho más fácil</option><option>Algo más fácil</option><option>Como esperaba</option><option>Algo más difícil</option><option>Mucho más difícil</option>
-              </select>
-            </div>
-            <div>
-              <label for="duration">¿Cuánto duró la conversación?</label>
-              <select id="duration" name="duration" required>
-                <option value="">Selecciona una opción</option>
-                <option>Menos de 1 minuto</option><option>Entre 1 y 5 minutos</option><option>Entre 5 y 15 minutos</option><option>Más de 15 minutos</option>
-              </select>
-            </div>
-          </div>
-          <div class="field two-columns">
-            <div><label for="before">¿Cómo te sentías antes?</label><input id="before" name="before" required placeholder="Nervioso, curioso…"></div>
-            <div><label for="after">¿Y después?</label><input id="after" name="after" required placeholder="Contento, aliviado…"></div>
-          </div>
-          <div class="field">
-            <label for="photo">Foto del sitio <span>(opcional)</span></label>
-            <input id="photo" type="file" accept="image/jpeg,image/png,image/webp">
-            <small>Solo del lugar; evita fotografiar a personas sin su permiso. Máximo 4 MB.</small>
-          </div>
+          <p class="field-help" id="dynamic-fields-help">Preparando las preguntas específicas de esta misión…</p>
+          <div id="dynamic-feedback-fields" aria-live="polite"></div>
         </fieldset>
 
         <fieldset>
@@ -117,6 +82,6 @@
   <nav class="mobile-app-nav" aria-label="Navegación móvil">
     <a href="/"><span>⌂</span>Inicio</a><a href="/misiones.html"><span>✦</span>Misiones</a><a class="active" href="/feedback.html"><span>✓</span>Reportar</a><a href="/proponer-mision.html"><span>＋</span>Proponer</a>
   </nav>
-  <script defer src="feedback.js"></script>
+  <script defer src="feedback.js?v=20260718-1"></script>
 </body>
 </html>
