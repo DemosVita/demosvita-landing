@@ -100,7 +100,7 @@
     const meta = element('div', 'mission-card-meta');
     meta.append(
       element('span', '', `${categoryIcons[mission.category] || '✦'} ${mission.category}`),
-      element('span', completion ? 'points-earned' : 'xp', completion ? `${mission.xp} puntos obtenidos` : `+${mission.xp} XP`)
+      element('span', completion ? 'points-earned' : 'xp', completion ? `+${mission.xp} XP por intento · ${completion.totalPoints} puntos obtenidos` : `+${mission.xp} XP`)
     );
     header.append(kicker, element('h3', '', mission.title), meta);
     return header;
@@ -242,8 +242,16 @@
 
     (data || []).forEach(report => {
       const existing = completedByMission.get(report.mission_id);
-      if (existing) existing.count += 1;
-      else completedByMission.set(report.mission_id, { latest: report, count: 1 });
+      if (existing) {
+        existing.count += 1;
+        existing.totalPoints += Number(report.xp_awarded || 0);
+      } else {
+        completedByMission.set(report.mission_id, {
+          latest: report,
+          count: 1,
+          totalPoints: Number(report.xp_awarded || 0)
+        });
+      }
     });
   }
 
