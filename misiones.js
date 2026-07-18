@@ -17,6 +17,24 @@
     Supera: '↗'
   };
 
+  const catalogImages = {
+    M02_COMERCIANTE_LOCAL: '/assets/misiones/1_Elcomerciantelocal.jpg',
+    M03_ADOPTA_UN_LUGAR: '/assets/misiones/2_Adoptaunlugar.jpg',
+    M04_EVENTO_QUE_NUNCA_HARIAS: '/assets/misiones/3_Eleventoquenuncaharias.jpg',
+    M05_RECOMENDACION_DESCONOCIDO: '/assets/misiones/4_Larecomendaciondeundesconocido.jpg',
+    M06_DIEZ_MINUTOS_SIN_SALIDA: '/assets/misiones/5_Diezminutossinsalida.jpg',
+    M01_HALAGO_HONESTO: '/assets/misiones/6_Elhalagohonesto.jpg',
+    M07_CAFE_SIN_PANTALLA: '/assets/misiones/7_Elcafesinpantalla.jpg',
+    M08_MODO_AVION_COMPARTIDO: '/assets/misiones/8_Modoavioncompartido.jpg',
+    M09_DIA_ENTERO_SIN_REDES: '/assets/misiones/9_Eldiaentero.jpg',
+    M10_LIBRERIA_AL_AZAR: '/assets/misiones/10_Libreriaalazar.jpg',
+    M11_MANOS_OCUPADAS: '/assets/misiones/11_Manosocupadas.jpg',
+    M12_APRENDE_DE_UN_EXTRANO: '/assets/misiones/12_Aprendedeunextra%C3%B1o.jpg',
+    M13_PIDE_SIN_MIEDO: '/assets/misiones/13_Pidesinmiedo.jpg',
+    M14_NO_QUE_SE_CONVIERTE_EN_SI: '/assets/misiones/14_Elnoqueseconvierteensi.jpg',
+    M15_MOMENTO_INCOMODO: '/assets/misiones/15_Elmomentoincomodo.jpg'
+  };
+
   let missions = [];
   let activeCategory = 'Todas';
 
@@ -46,29 +64,44 @@
     );
     media.append(placeholder);
 
-    if (mission.image_url) {
+    const imageSources = [catalogImages[mission.code], mission.image_url]
+      .filter((source, index, values) => source && values.indexOf(source) === index);
+
+    if (imageSources.length) {
       const image = document.createElement('img');
-      image.src = mission.image_url;
+      let sourceIndex = 0;
+      image.src = imageSources[sourceIndex];
       image.alt = `Imagen de la misión ${mission.title}`;
       image.loading = 'lazy';
-      image.addEventListener('error', () => image.remove(), { once: true });
+      image.addEventListener('load', () => media.classList.add('has-image'));
+      image.addEventListener('error', () => {
+        sourceIndex += 1;
+        if (sourceIndex < imageSources.length) {
+          image.src = imageSources[sourceIndex];
+          return;
+        }
+        image.remove();
+      });
       media.append(image);
     }
-
-    media.append(
-      element('span', 'difficulty', mission.difficulty),
-      element('span', 'mission-number', `MISIÓN ${missionNumber(mission)}`)
-    );
     return media;
   }
 
-  function buildVisual(mission) {
-    const visual = element('div', 'mission-visual');
-    visual.append(buildMedia(mission));
-    if (mission.tagline) {
-      visual.append(element('p', 'mission-motto', mission.tagline));
-    }
-    return visual;
+  function buildHeader(mission) {
+    const header = element('header', 'mission-card-header');
+    const kicker = element('div', 'mission-card-kicker');
+    kicker.append(
+      element('span', 'mission-number-label', `MISIÓN ${missionNumber(mission)}`),
+      element('span', 'difficulty-label', mission.difficulty)
+    );
+
+    const meta = element('div', 'mission-card-meta');
+    meta.append(
+      element('span', '', `${categoryIcons[mission.category] || '✦'} ${mission.category}`),
+      element('span', 'xp', `+${mission.xp} XP`)
+    );
+    header.append(kicker, element('h3', '', mission.title), meta);
+    return header;
   }
 
   function buildConditions(mission) {
@@ -95,16 +128,12 @@
     const card = element('article', 'mission-card');
     card.id = mission.slug;
     card.dataset.category = mission.category;
-    const visual = buildVisual(mission);
-
+    const visual = element('div', 'mission-visual');
+    visual.append(buildHeader(mission), buildMedia(mission));
+    if (mission.tagline) {
+      visual.append(element('p', 'mission-motto', mission.tagline));
+    }
     const content = element('div', 'mission-content');
-    const meta = element('div', 'mission-meta');
-    meta.append(
-      element('span', '', `${categoryIcons[mission.category] || '✦'} ${mission.category}`),
-      element('span', 'xp', `+${mission.xp} XP`)
-    );
-    content.append(meta, element('h3', '', mission.title));
-
     content.append(element('p', 'mission-description', mission.description));
 
     const conditions = buildConditions(mission);
