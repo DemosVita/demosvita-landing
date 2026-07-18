@@ -95,7 +95,7 @@
     const card = element('article', 'mission-card');
     card.id = mission.slug;
     card.dataset.category = mission.category;
-    card.append(buildVisual(mission));
+    const visual = buildVisual(mission);
 
     const content = element('div', 'mission-content');
     const meta = element('div', 'mission-meta');
@@ -120,7 +120,8 @@
     shareButton.dataset.shareTitle = mission.title;
     actions.append(reportLink, shareButton);
     content.append(actions);
-    card.append(content);
+    visual.append(content);
+    card.append(visual);
     return card;
   }
 
