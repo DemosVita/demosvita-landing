@@ -6,6 +6,9 @@
   <meta name="description" content="Descubre las misiones activas de DemosVita y atrévete a vivir algo diferente.">
   <title>Misiones · DemosVita</title>
   <link rel="stylesheet" href="misiones.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script defer src="supabase-config.js"></script>
+  <script defer src="misiones.js"></script>
 </head>
 <body>
   <header class="site-header">
@@ -34,43 +37,33 @@
           <span class="eyebrow">MISIONES ACTIVAS</span>
           <h2 id="available-title">Tu aventura empieza aquí</h2>
         </div>
-        <span class="counter">1 misión disponible</span>
+        <span class="counter" id="mission-counter" aria-live="polite">Cargando misiones…</span>
       </div>
 
-      <article class="mission-card">
-        <div class="mission-image">
-          <img src="/assets/misiones/halago-portada.png" alt="Una persona inicia una conversación con un desconocido" onerror="this.parentElement.classList.add('image-fallback');this.remove()">
-          <span class="difficulty">Difícil</span>
-          <span class="mission-number">MISIÓN 01</span>
-        </div>
-        <div class="mission-content">
-          <div class="mission-meta">
-            <span>🤝 Conecta</span>
-            <span class="xp">+150 XP</span>
-          </div>
-          <h3>El halago honesto</h3>
-          <blockquote>“El que se guarda un halago, se queda con algo que no es suyo.”</blockquote>
-          <p>Dile a un desconocido algo genuinamente positivo que hayas notado. Sin motivo. No hace falta que sea perfecto, solo honesto.</p>
-          <div class="conditions">
-            <strong>Condiciones</strong>
-            <ul>
-              <li>A un desconocido</li>
-              <li>En un lugar público</li>
-              <li>Que derive en al menos 5 minutos de conversación</li>
-            </ul>
-          </div>
-          <div class="card-actions">
-            <a class="primary" href="/feedback.html?mission=M01_HALAGO_HONESTO&source=web">Ya la he hecho</a>
-            <button class="text-button" type="button" data-copy-url="https://www.demosvita.com/misiones.html#halago">Compartir misión</button>
-          </div>
-        </div>
-      </article>
+      <div class="mission-filters" id="mission-filters" aria-label="Filtrar misiones por categoría" hidden></div>
+
+      <div class="catalog-status" id="catalog-loading" role="status">
+        <span class="catalog-spinner" aria-hidden="true"></span>
+        <p>Preparando el mapa de misiones…</p>
+      </div>
+
+      <div class="catalog-status catalog-error" id="catalog-error" role="alert" hidden>
+        <strong>No hemos podido cargar las misiones.</strong>
+        <p>Comprueba tu conexión y vuelve a intentarlo.</p>
+        <button class="secondary-button" id="retry-catalog" type="button">Reintentar</button>
+      </div>
+
+      <div class="mission-grid" id="mission-grid" aria-live="polite"></div>
+
+      <noscript>
+        <p class="catalog-status">Necesitas activar JavaScript para consultar el catálogo de misiones.</p>
+      </noscript>
     </section>
 
     <section class="coming-soon">
-      <span class="eyebrow">PRÓXIMAMENTE</span>
-      <h2>Nuevas formas de mirar tu ciudad.</h2>
-      <p>Los primeros Exploradores también podrán proponer ideas para las próximas misiones.</p>
+      <span class="eyebrow">LA COMUNIDAD TAMBIÉN DECIDE</span>
+      <h2>¿Tienes una misión en mente?</h2>
+      <p>Cuéntanos tu idea y ayúdanos a diseñar las próximas formas de mirar el mundo.</p>
       <a href="/proponer-mision.html?source=web">Proponer una misión →</a>
     </section>
   </main>
@@ -80,14 +73,9 @@
     <p>The world was always there. Now it’s your turn.</p>
     <small>© 2026 DemosVita · <a href="mailto:info@demosvita.com">info@demosvita.com</a></small>
   </footer>
+
   <nav class="mobile-app-nav" aria-label="Navegación móvil">
     <a href="/"><span>⌂</span>Inicio</a><a class="active" href="/misiones.html"><span>✦</span>Misiones</a><a href="/feedback.html"><span>✓</span>Reportar</a><a href="/acceso.html"><span>●</span>Cuenta</a>
   </nav>
-  <script>
-    document.querySelector('[data-copy-url]').addEventListener('click', async function () {
-      try { await navigator.clipboard.writeText(this.dataset.copyUrl); this.textContent = 'Enlace copiado ✓'; }
-      catch (_) { this.textContent = 'Copia: demosvita.com/misiones.html'; }
-    });
-  </script>
 </body>
 </html>
