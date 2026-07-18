@@ -5,81 +5,62 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="description" content="Tu perfil, progreso e histórico de misiones DemosVita.">
   <title>Mi cuenta · DemosVita</title>
-  <link rel="stylesheet" href="misiones.css">
-  <link rel="stylesheet" href="cuenta.css">
+  <link rel="stylesheet" href="misiones.css?v=20260718-4">
+  <link rel="stylesheet" href="cuenta.css?v=20260718-2">
   <style>html.auth-pending body{visibility:hidden}.guard-error{min-height:100vh;display:grid;place-content:center;gap:18px;text-align:center;padding:30px}.guard-error img{margin:auto}.guard-error a{color:#234E3B;font-weight:800}</style>
   <script>document.documentElement.classList.add('auth-pending')</script>
   <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script defer src="supabase-config.js"></script>
   <script defer src="auth-guard.js"></script>
-  <script defer src="cuenta.js"></script>
+  <script defer src="cuenta.js?v=20260718-2"></script>
 </head>
 <body class="account-page">
   <header class="site-header">
-    <a class="brand" href="index.html" aria-label="DemosVita, inicio">
-      <img src="logo-green.png" alt="" width="52" height="52">
-      <span>DemosVita<b>.</b></span>
-    </a>
-    <nav aria-label="Navegación principal">
-      <a href="index.html">Inicio</a>
-      <a href="misiones.html">Misiones</a>
-      <a class="nav-button active" href="cuenta.html">Mi cuenta</a>
-    </nav>
+    <a class="brand" href="index.html" aria-label="DemosVita, inicio"><img src="logo-green.png" alt="" width="52" height="52"><span>DemosVita<b>.</b></span></a>
+    <nav aria-label="Navegación principal"><a href="index.html">Inicio</a><a href="misiones.html">Misiones</a><a class="nav-button active" href="cuenta.html">Mi cuenta</a></nav>
   </header>
 
   <main class="dashboard-main">
     <div id="account-loading" class="account-loading">Preparando tu cuaderno de Explorador…</div>
-
     <div id="account-content" hidden>
       <section class="profile-hero">
-        <div>
-          <span class="eyebrow">MI CUENTA DEMOSVITA</span>
-          <h1>Explorador <em id="explorer-number">—</em></h1>
-          <p id="profile-email"></p>
-        </div>
-        <div class="profile-actions">
-          <a class="primary" href="misiones.html">Ver misiones</a>
-          <button id="sign-out" class="text-button" type="button">Cerrar sesión</button>
-        </div>
+        <div><span class="eyebrow">MI CUENTA DEMOSVITA</span><h1>Explorador <em id="explorer-number">—</em></h1><p id="profile-email"></p></div>
+        <div class="profile-actions"><a class="primary" href="misiones.html">Ver misiones</a><button id="sign-out" class="text-button" type="button">Cerrar sesión</button></div>
       </section>
 
       <section class="stats-grid" aria-label="Estadísticas del Explorador">
         <article class="stat-card"><span>PERFIL</span><strong id="profile-archetype">—</strong><small>Tu forma de vivir la aventura</small></article>
         <article class="stat-card"><span>NIVEL</span><strong id="profile-level">1</strong><small id="level-progress">0 / 500 XP</small></article>
         <article class="stat-card"><span>EXPERIENCIA</span><strong><b id="profile-xp">0</b> XP</strong><small>Ganados completando misiones</small></article>
-        <article class="stat-card"><span>MISIONES</span><strong id="report-count">0</strong><small>Experiencias reportadas</small></article>
+        <article class="stat-card"><span>INTENTOS</span><strong id="report-count">0</strong><small>Misiones reportadas</small></article>
       </section>
 
-      <section class="history-section">
+      <section class="history-section" id="historico">
         <div class="section-heading">
-          <div><span class="eyebrow">TU RECORRIDO</span><h2>Histórico de misiones</h2></div>
-          <a href="feedback.html">Reportar una misión →</a>
+          <div><span class="eyebrow">TU RECORRIDO</span><h2>Tu cuaderno de aventuras</h2></div>
         </div>
-        <div id="history-list" class="history-list"></div>
-        <div id="empty-history" class="empty-history" hidden>
-          <span>✦</span>
-          <h3>Tu historia empieza con una misión.</h3>
-          <p>Cuando reportes la primera experiencia, aparecerá aquí junto con los XP conseguidos.</p>
-          <a class="primary" href="misiones.html">Elegir mi primera misión</a>
-        </div>
-      </section>
 
-      <section class="proposal-summary">
-        <div><span class="eyebrow">CONSTRUYE LA COMUNIDAD</span><h2>Tus propuestas</h2><p>Ideas de misiones que has enviado a DemosVita.</p></div>
-        <div class="proposal-count"><strong id="proposal-count">0</strong><span>propuestas enviadas</span></div>
-        <a class="primary" href="proponer-mision.html">Proponer misión</a>
+        <div class="account-tabs" role="tablist" aria-label="Histórico de la cuenta">
+          <button id="tab-reports" class="active" type="button" role="tab" aria-selected="true" aria-controls="reports-panel" data-account-tab="reports">Misiones cumplidas <span id="reports-tab-count">0</span></button>
+          <button id="tab-proposals" type="button" role="tab" aria-selected="false" aria-controls="proposals-panel" data-account-tab="proposals">Misiones propuestas <span id="proposals-tab-count">0</span></button>
+        </div>
+
+        <div id="reports-panel" class="account-panel" role="tabpanel" aria-labelledby="tab-reports">
+          <div class="panel-toolbar"><p>Cada intento se conserva por separado. Abre uno para consultar las respuestas que enviaste.</p><a href="misiones.html">Elegir otra misión →</a></div>
+          <div id="history-list" class="history-list"></div>
+          <div id="empty-history" class="empty-history" hidden><span>✦</span><h3>Tu historia empieza con una misión.</h3><p>Cuando reportes la primera experiencia aparecerá aquí, junto con tus respuestas.</p><a class="primary" href="misiones.html">Elegir mi primera misión</a></div>
+        </div>
+
+        <div id="proposals-panel" class="account-panel" role="tabpanel" aria-labelledby="tab-proposals" hidden>
+          <div class="panel-toolbar"><p>Consulta en modo lectura todas las ideas que has enviado.</p><a href="proponer-mision.html">Proponer otra misión →</a></div>
+          <div id="proposal-history-list" class="history-list"></div>
+          <div id="empty-proposals" class="empty-history" hidden><span>◇</span><h3>Todavía no has propuesto ninguna misión.</h3><p>Tu idea puede convertirse en la próxima aventura de la comunidad.</p><a class="primary" href="proponer-mision.html">Proponer una misión</a></div>
+        </div>
       </section>
     </div>
-
     <p id="account-error" class="account-error" role="alert" hidden></p>
   </main>
 
-  <nav class="mobile-app-nav" aria-label="Navegación móvil">
-    <a href="index.html"><span>⌂</span>Inicio</a>
-    <a href="misiones.html"><span>✦</span>Misiones</a>
-    <a href="feedback.html"><span>✓</span>Reportar</a>
-    <a class="active" href="cuenta.html"><span>●</span>Cuenta</a>
-  </nav>
-
+  <nav class="mobile-app-nav" aria-label="Navegación móvil"><a href="index.html"><span>⌂</span>Inicio</a><a href="misiones.html"><span>✦</span>Misiones</a><a href="feedback.html"><span>✓</span>Reportar</a><a class="active" href="cuenta.html"><span>●</span>Cuenta</a></nav>
 </body>
 </html>

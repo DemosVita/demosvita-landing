@@ -83,7 +83,7 @@
       photoPath = await uploadPhoto(session.user.id);
       const data = new FormData(form);
       const answers = collectAnswers(photoPath);
-      const { error } = await client.from('mission_reports').insert({
+      const { data: savedReport, error } = await client.from('mission_reports').insert({
         user_id: session.user.id,
         mission_id: mission.id,
         source,
@@ -92,12 +92,14 @@
         ideas: value(data, 'ideas') || null,
         photo_path: photoPath,
         anonymous_share_permission: data.get('sharePermission') === 'Sí'
-      });
+      }).select('id').single();
 
       if (error) throw error;
 
       form.hidden = true;
       document.querySelector('.xp-earned').textContent = `+${Number(mission.xp || 0)} XP`;
+      const historyLink = document.querySelector('#success-history-link');
+      if (historyLink && savedReport) historyLink.href = `/cuenta.html#report-${encodeURIComponent(savedReport.id)}`;
       document.querySelector('#success-screen').hidden = false;
       window.scrollTo({ top: document.querySelector('.form-shell').offsetTop - 100, behavior: 'smooth' });
     } catch (error) {
@@ -293,7 +295,7 @@
   }
 
   function humanizeError(error) {
-    if (error && error.code === '23505') return 'Esta misión ya figura como completada en tu histórico.';
+    if (error && error.code === '23505') return 'Falta activar en la base de datos la actualización que permite repetir misiones.';
     if (error && /answers|schema cache/i.test(error.message || '')) return 'Falta activar la actualización del formulario en la base de datos.';
     return error && error.message ? error.message : 'No se pudo guardar la misión. Inténtalo de nuevo.';
   }
