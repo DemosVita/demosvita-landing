@@ -37,6 +37,7 @@
 
   let missions = [];
   let activeCategory = 'Todas';
+  let completedByMission = new Map();
 
   function element(tag, className, text) {
     const node = document.createElement(tag);
@@ -90,15 +91,16 @@
   function buildHeader(mission) {
     const header = element('header', 'mission-card-header');
     const kicker = element('div', 'mission-card-kicker');
-    kicker.append(
-      element('span', 'mission-number-label', `MISIÓN ${missionNumber(mission)}`),
-      element('span', 'difficulty-label', mission.difficulty)
-    );
+    const completion = completedByMission.get(mission.id);
+    const labels = element('div', 'mission-card-labels');
+    labels.append(element('span', 'mission-number-label', `MISIÓN ${missionNumber(mission)}`));
+    if (completion) labels.append(element('span', 'completion-seal', 'Completada ✓'));
+    kicker.append(labels, element('span', 'difficulty-label', mission.difficulty));
 
     const meta = element('div', 'mission-card-meta');
     meta.append(
       element('span', '', `${categoryIcons[mission.category] || '✦'} ${mission.category}`),
-      element('span', 'xp', `+${mission.xp} XP`)
+      element('span', completion ? 'points-earned' : 'xp', completion ? `${mission.xp} puntos obtenidos` : `+${mission.xp} XP`)
     );
     header.append(kicker, element('h3', '', mission.title), meta);
     return header;
@@ -128,6 +130,8 @@
     const card = element('article', 'mission-card');
     card.id = mission.slug;
     card.dataset.category = mission.category;
+    const completion = completedByMission.get(mission.id);
+    if (completion) card.classList.add('is-completed');
     const visual = element('div', 'mission-visual');
     visual.append(buildHeader(mission), buildMedia(mission));
     if (mission.tagline) {
@@ -140,14 +144,22 @@
     if (conditions) content.append(conditions);
 
     const actions = element('div', 'card-actions');
-    const reportLink = element('a', 'primary', 'Ya la he hecho');
-    reportLink.href = `/feedback.html?mission=${encodeURIComponent(mission.code)}&source=web`;
+    const reportLink = element('a', 'primary', completion ? 'Ver mi reporte' : 'Ya la he hecho');
+    reportLink.href = completion
+      ? `/cuenta.html#report-${encodeURIComponent(completion.latest.id)}`
+      : `/feedback.html?mission=${encodeURIComponent(mission.code)}&source=web`;
 
     const shareButton = element('button', 'text-button', 'Compartir misión');
     shareButton.type = 'button';
     shareButton.dataset.shareMission = mission.slug;
     shareButton.dataset.shareTitle = mission.title;
-    actions.append(reportLink, shareButton);
+    actions.append(reportLink);
+    if (completion) {
+      const repeatLink = element('a', 'repeat-link', completion.count > 1 ? `Repetir misión · ${completion.count} intentos` : 'Volver a hacerla');
+      repeatLink.href = `/feedback.html?mission=${encodeURIComponent(mission.code)}&source=repeat`;
+      actions.append(repeatLink);
+    }
+    actions.append(shareButton);
     content.append(actions);
     visual.append(content);
     card.append(visual);
@@ -192,7 +204,7 @@
   }
 
   async function fetchMissions() {
-    const fields = 'code,catalog_id,slug,title,tagline,description,category,difficulty,xp,conditions,feedback_prompt,feedback_questions,image_url,sort_order,published_at';
+    const fields = 'id,code,catalog_id,slug,title,tagline,description,category,difficulty,xp,conditions,feedback_prompt,feedback_questions,image_url,sort_order,published_at';
     let response = await client
       .from('missions')
       .select(fields)
@@ -205,13 +217,34 @@
     if (response.error && /catalog_id|feedback_prompt|feedback_questions|sort_order/i.test(response.error.message || '')) {
       response = await client
         .from('missions')
-        .select('code,slug,title,tagline,description,category,difficulty,xp,conditions,image_url,published_at')
+        .select('id,code,slug,title,tagline,description,category,difficulty,xp,conditions,image_url,published_at')
         .eq('is_active', true)
         .order('code', { ascending: true });
     }
 
     if (response.error) throw response.error;
     return response.data || [];
+  }
+
+  async function loadCompletionState() {
+    completedByMission = new Map();
+    const { data: sessionData } = await client.auth.getSession();
+    if (!sessionData.session) return;
+
+    const { data, error } = await client
+      .from('mission_reports')
+      .select('id,mission_id,created_at,xp_awarded')
+      .order('created_at', { ascending: false });
+    if (error) {
+      console.warn('No se pudo cargar el progreso del catálogo', error);
+      return;
+    }
+
+    (data || []).forEach(report => {
+      const existing = completedByMission.get(report.mission_id);
+      if (existing) existing.count += 1;
+      else completedByMission.set(report.mission_id, { latest: report, count: 1 });
+    });
   }
 
   async function loadCatalog() {
@@ -222,6 +255,7 @@
 
     try {
       missions = await fetchMissions();
+      await loadCompletionState();
       activeCategory = 'Todas';
       renderFilters();
       renderMissions();
