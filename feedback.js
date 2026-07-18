@@ -8,10 +8,13 @@
   const form = document.querySelector('#mission-feedback-form');
   const status = document.querySelector('#form-status');
   const button = form.querySelector('.submit-button');
+  const fieldsContainer = document.querySelector('#dynamic-feedback-fields');
+  const fieldsHelp = document.querySelector('#dynamic-fields-help');
   button.disabled = true;
 
   let session;
   let mission;
+  let feedbackSchema = [];
 
   init();
 
@@ -26,22 +29,46 @@
 
       const [profileResult, missionResult] = await Promise.all([
         client.from('profiles').select('email,explorer_number,archetype').eq('user_id', session.user.id).single(),
-        client.from('missions').select('id,code,title,category,xp').eq('code', missionCode).eq('is_active', true).single()
+        loadMission()
       ]);
 
       if (profileResult.error) throw profileResult.error;
       if (missionResult.error) throw new Error('No hemos encontrado la misión que quieres reportar.');
 
       mission = missionResult.data;
+      feedbackSchema = normalizeSchema(mission);
+      if (!feedbackSchema.length) throw new Error('Esta misión todavía no tiene configuradas sus preguntas de feedback.');
+
       document.querySelector('#report-profile-name').textContent = `Explorador #${profileResult.data.explorer_number} · ${capitalize(profileResult.data.archetype || 'explorador')}`;
       document.querySelector('#report-profile-email').textContent = profileResult.data.email;
       renderMission(mission);
+      renderDynamicFields(feedbackSchema);
       button.disabled = false;
     } catch (error) {
       showError(error.message || 'No hemos podido preparar el formulario. Recarga la página.');
+      fieldsHelp.textContent = 'No se pudieron cargar las preguntas de esta misión.';
       button.disabled = true;
       console.error(error);
     }
+  }
+
+  async function loadMission() {
+    let result = await client
+      .from('missions')
+      .select('id,code,title,category,xp,feedback_schema,feedback_questions')
+      .eq('code', missionCode)
+      .eq('is_active', true)
+      .single();
+
+    if (result.error && /feedback_schema/i.test(result.error.message || '')) {
+      result = await client
+        .from('missions')
+        .select('id,code,title,category,xp,feedback_questions')
+        .eq('code', missionCode)
+        .eq('is_active', true)
+        .single();
+    }
+    return result;
   }
 
   form.addEventListener('submit', async event => {
@@ -55,17 +82,12 @@
     try {
       photoPath = await uploadPhoto(session.user.id);
       const data = new FormData(form);
+      const answers = collectAnswers(photoPath);
       const { error } = await client.from('mission_reports').insert({
         user_id: session.user.id,
         mission_id: mission.id,
         source,
-        place: value(data, 'place'),
-        words: value(data, 'words'),
-        reaction: value(data, 'reaction'),
-        perceived_difficulty: value(data, 'difficulty'),
-        conversation_duration: value(data, 'duration'),
-        feeling_before: value(data, 'before'),
-        feeling_after: value(data, 'after'),
+        answers,
         improvements: value(data, 'improvements') || null,
         ideas: value(data, 'ideas') || null,
         photo_path: photoPath,
@@ -86,10 +108,136 @@
     }
   });
 
+  function normalizeSchema(currentMission) {
+    if (Array.isArray(currentMission.feedback_schema) && currentMission.feedback_schema.length) {
+      return currentMission.feedback_schema.filter(isValidField);
+    }
+
+    const questions = Array.isArray(currentMission.feedback_questions) ? currentMission.feedback_questions : [];
+    return questions.map((question, index) => ({
+      key: /foto/i.test(question) ? 'photo' : `q${index + 1}`,
+      label: String(question),
+      type: /foto/i.test(question) ? 'photo' : 'textarea',
+      required: !/foto|opcional/i.test(question),
+      rows: 3
+    }));
+  }
+
+  function isValidField(field) {
+    return field && typeof field === 'object' && field.key && field.label && ['text', 'textarea', 'select', 'checkbox', 'photo'].includes(field.type);
+  }
+
+  function renderDynamicFields(schema) {
+    fieldsContainer.replaceChildren();
+    fieldsHelp.textContent = 'Estas preguntas se adaptan a la misión que has completado.';
+
+    schema.forEach((definition, index) => {
+      const key = sanitizeFieldKey(definition.key, index);
+      const inputId = `feedback-${key}`;
+
+      if (definition.type === 'checkbox') {
+        fieldsContainer.append(buildCheckboxField(definition, key, inputId));
+        return;
+      }
+
+      const wrapper = element('div', 'field');
+      const label = element('label', '', definition.label);
+      label.htmlFor = inputId;
+      const input = buildInput(definition, key, inputId);
+      wrapper.append(label, input);
+
+      if (definition.help) wrapper.append(element('small', '', definition.help));
+      fieldsContainer.append(wrapper);
+    });
+  }
+
+  function buildInput(definition, key, inputId) {
+    let input;
+
+    if (definition.type === 'textarea') {
+      input = document.createElement('textarea');
+      input.rows = Math.min(Math.max(Number(definition.rows) || 3, 2), 8);
+      input.maxLength = 4000;
+      input.placeholder = 'Cuéntanoslo con tus propias palabras';
+    } else if (definition.type === 'select') {
+      input = document.createElement('select');
+      const emptyOption = document.createElement('option');
+      emptyOption.value = '';
+      emptyOption.textContent = 'Selecciona una opción';
+      input.append(emptyOption);
+      (Array.isArray(definition.options) ? definition.options : []).forEach(optionValue => {
+        const option = document.createElement('option');
+        option.value = String(optionValue);
+        option.textContent = String(optionValue);
+        input.append(option);
+      });
+    } else {
+      input = document.createElement('input');
+      input.type = definition.type === 'photo' ? 'file' : 'text';
+      if (definition.type === 'photo') {
+        input.accept = 'image/jpeg,image/png,image/webp';
+        input.dataset.feedbackPhoto = 'true';
+      } else {
+        input.maxLength = 500;
+        input.placeholder = 'Escribe tu respuesta';
+      }
+    }
+
+    input.id = inputId;
+    input.name = `feedback_${key}`;
+    input.required = Boolean(definition.required);
+    applyFeedbackMetadata(input, definition, key);
+    return input;
+  }
+
+  function buildCheckboxField(definition, key, inputId) {
+    const wrapper = element('div', 'field dynamic-confirmation');
+    const label = element('label', 'permission');
+    const input = document.createElement('input');
+    input.type = 'checkbox';
+    input.id = inputId;
+    input.name = `feedback_${key}`;
+    input.required = Boolean(definition.required);
+    applyFeedbackMetadata(input, definition, key);
+    label.append(input, element('span', '', definition.label));
+    wrapper.append(label);
+    return wrapper;
+  }
+
+  function applyFeedbackMetadata(input, definition, key) {
+    input.dataset.feedbackKey = key;
+    input.dataset.feedbackLabel = String(definition.label);
+    input.dataset.feedbackType = definition.type;
+  }
+
+  function collectAnswers(photoPath) {
+    const responses = Array.from(form.querySelectorAll('[data-feedback-key]')).map(input => {
+      let answer;
+      if (input.dataset.feedbackType === 'photo') answer = photoPath;
+      else if (input.dataset.feedbackType === 'checkbox') answer = input.checked;
+      else answer = String(input.value || '').trim();
+
+      return {
+        key: input.dataset.feedbackKey,
+        question: input.dataset.feedbackLabel,
+        type: input.dataset.feedbackType,
+        answer
+      };
+    });
+
+    return {
+      version: 1,
+      mission_code: mission.code,
+      responses
+    };
+  }
+
   async function uploadPhoto(userId) {
-    const file = document.querySelector('#photo').files[0];
+    const input = form.querySelector('[data-feedback-photo]');
+    const file = input && input.files ? input.files[0] : null;
     if (!file) return null;
     if (file.size > 4 * 1024 * 1024) throw new Error('La fotografía supera el máximo de 4 MB.');
+    if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) throw new Error('La fotografía debe ser JPG, PNG o WebP.');
 
     const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
     const uniquePart = window.crypto && crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random().toString(16).slice(2)}`;
@@ -110,12 +258,23 @@
     button.textContent = `Completar misión · +${Number(currentMission.xp || 0)} XP`;
   }
 
+  function element(tag, className, text) {
+    const node = document.createElement(tag);
+    if (className) node.className = className;
+    if (text !== undefined) node.textContent = text;
+    return node;
+  }
+
   function value(data, key) {
     return String(data.get(key) || '').trim();
   }
 
   function sanitize(input, maxLength) {
     return String(input || '').replace(/[^0-9A-Za-z_-]/g, '').slice(0, maxLength);
+  }
+
+  function sanitizeFieldKey(input, index) {
+    return String(input || `q${index + 1}`).replace(/[^0-9A-Za-z_-]/g, '').slice(0, 80) || `q${index + 1}`;
   }
 
   function capitalize(input) {
@@ -135,6 +294,7 @@
 
   function humanizeError(error) {
     if (error && error.code === '23505') return 'Esta misión ya figura como completada en tu histórico.';
+    if (error && /answers|schema cache/i.test(error.message || '')) return 'Falta activar la actualización del formulario en la base de datos.';
     return error && error.message ? error.message : 'No se pudo guardar la misión. Inténtalo de nuevo.';
   }
 })();
