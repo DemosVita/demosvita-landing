@@ -14,7 +14,8 @@
     Conecta: '🤝',
     Contempla: '🌿',
     Descubre: '🎨',
-    Supera: '↗'
+    Supera: '↗',
+    'Asómbrate': '🌄'
   };
 
   const catalogImages = {
@@ -189,7 +190,7 @@
   }
 
   function renderFilters() {
-    const preferredOrder = ['Explora', 'Conecta', 'Contempla', 'Descubre', 'Supera'];
+    const preferredOrder = ['Explora', 'Conecta', 'Contempla', 'Descubre', 'Supera', 'Asómbrate'];
     const available = new Set(missions.map(mission => mission.category));
     const categories = ['Todas', ...preferredOrder.filter(category => available.has(category))];
 
