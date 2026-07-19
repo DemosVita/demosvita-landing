@@ -192,7 +192,11 @@
   function renderFilters() {
     const preferredOrder = ['Explora', 'Conecta', 'Contempla', 'Descubre', 'Supera', 'Asómbrate'];
     const available = new Set(missions.map(mission => mission.category));
-    const categories = ['Todas', ...preferredOrder.filter(category => available.has(category))];
+    const orderedCategories = preferredOrder.filter(category => available.has(category));
+    const additionalCategories = [...available]
+      .filter(category => !preferredOrder.includes(category))
+      .sort((a, b) => a.localeCompare(b, 'es'));
+    const categories = ['Todas', ...orderedCategories, ...additionalCategories];
 
     filters.replaceChildren(...categories.map(category => {
       const button = element('button', category === activeCategory ? 'active' : '', category);
