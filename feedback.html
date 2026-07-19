@@ -6,7 +6,17 @@
   <meta name="description" content="Cuéntanos cómo ha ido tu misión de DemosVita.">
   <title>Reportar misión · DemosVita</title>
   <link rel="stylesheet" href="misiones.css?v=20260718-4">
-  <style>html.auth-pending body{visibility:hidden}.guard-error{min-height:100vh;display:grid;place-content:center;gap:18px;text-align:center;padding:30px}.guard-error img{margin:auto}.guard-error a{color:#234E3B;font-weight:800}</style>
+  <style>
+html.auth-pending body{visibility:hidden}
+.guard-error{min-height:100vh;display:grid;place-content:center;gap:18px;text-align:center;padding:30px}
+.guard-error img{margin:auto}.guard-error a{color:#234E3B;font-weight:800}
+.mission-picker{margin-bottom:26px}
+.mission-picker select{font-weight:700;color:#234E3B}
+.selected-mission[hidden]{display:none}
+.selected-mission .selected-conditions{margin:10px 0 0;padding-left:20px;color:#667085;font-size:14px;line-height:1.55}
+.selected-mission .selected-conditions li+li{margin-top:4px}
+@media(max-width:700px){.mission-picker{margin-bottom:18px}}
+</style>
   <script>document.documentElement.classList.add('auth-pending')</script>
   <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script defer src="supabase-config.js"></script>
@@ -34,11 +44,22 @@
     </section>
 
     <section class="form-shell">
-      <div id="mission-summary" class="selected-mission" aria-live="polite"></div>
-
       <form id="mission-feedback-form" enctype="multipart/form-data">
+        <fieldset class="mission-picker">
+          <legend>1. Elige la misión</legend>
+          <div class="field">
+            <label for="mission-selector">¿Qué misión has completado?</label>
+            <select id="mission-selector" name="mission" required disabled>
+              <option value="">Cargando misiones…</option>
+            </select>
+            <small>Puedes cambiar la misión antes de enviar el reporte.</small>
+          </div>
+        </fieldset>
+
+        <div id="mission-summary" class="selected-mission" aria-live="polite" hidden></div>
+
         <fieldset>
-          <legend>1. Tu cuenta</legend>
+          <legend>2. Tu cuenta</legend>
           <p class="field-help">La misión quedará asociada automáticamente a tu recorrido.</p>
           <div class="signup-invitation" aria-live="polite">
             <strong id="report-profile-name">Preparando tu perfil de Explorador…</strong>
@@ -47,13 +68,13 @@
         </fieldset>
 
         <fieldset id="experience-fields">
-          <legend>2. La experiencia</legend>
-          <p class="field-help" id="dynamic-fields-help">Preparando las preguntas específicas de esta misión…</p>
+          <legend>3. La experiencia</legend>
+          <p class="field-help" id="dynamic-fields-help">Selecciona una misión para cargar sus preguntas específicas.</p>
           <div id="dynamic-feedback-fields" aria-live="polite"></div>
         </fieldset>
 
         <fieldset>
-          <legend>3. Ayúdanos a mejorar</legend>
+          <legend>4. Ayúdanos a mejorar</legend>
           <div class="field">
             <label for="improvements">¿Qué cambiarías de esta misión?</label>
             <textarea id="improvements" name="improvements" rows="3" placeholder="Instrucciones, dificultad, condiciones…"></textarea>
@@ -65,7 +86,7 @@
           <label class="permission"><input type="checkbox" name="sharePermission" value="Sí"><span>Autorizo a DemosVita a compartir mi experiencia de forma anónima. Antes de publicar mi nombre o fotografía deberán pedirme permiso expresamente.</span></label>
         </fieldset>
 
-        <button class="submit-button" type="submit">Completar misión · +150 XP</button>
+        <button class="submit-button" type="submit">Selecciona una misión</button>
         <p id="form-status" class="form-status" role="status" aria-live="polite"></p>
       </form>
 
@@ -82,6 +103,6 @@
   <nav class="mobile-app-nav" aria-label="Navegación móvil">
     <a href="/"><span>⌂</span>Inicio</a><a href="/misiones.html"><span>✦</span>Misiones</a><a class="active" href="/feedback.html"><span>✓</span>Reportar</a><a href="/proponer-mision.html"><span>＋</span>Proponer</a>
   </nav>
-  <script defer src="feedback.js?v=20260718-2"></script>
+  <script defer src="feedback.js?v=20260719-1"></script>
 </body>
 </html>
