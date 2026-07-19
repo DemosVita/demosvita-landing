@@ -839,6 +839,93 @@ footer {
 .landing-auth-links button{margin:0;padding:6px;background:none;color:var(--forest);box-shadow:none}
 #landing-auth-status{min-height:24px;margin-top:20px;font-weight:700}
 #landing-session-step .primary{display:inline-block;margin-top:24px}
+
+/* Preguntas frecuentes */
+.faq {
+  padding: 110px 8%;
+  background:
+    radial-gradient(circle at 12% 10%, rgba(212,160,23,.10), transparent 30%),
+    var(--off);
+}
+.faq-wrap {
+  max-width: 920px;
+  margin: 0 auto;
+}
+.faq .section-head {
+  margin-bottom: 46px;
+}
+.faq-list {
+  display: grid;
+  gap: 14px;
+}
+.faq-item {
+  background: rgba(255,255,255,.86);
+  border: 1px solid rgba(35,78,59,.12);
+  border-radius: 22px;
+  overflow: hidden;
+  box-shadow: 0 14px 42px rgba(31,41,51,.05);
+}
+.faq-item[open] {
+  border-color: rgba(212,160,23,.50);
+  box-shadow: 0 18px 55px rgba(31,41,51,.08);
+}
+.faq-item summary {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: 78px;
+  padding: 22px 68px 22px 26px;
+  color: var(--forest);
+  font-size: 18px;
+  font-weight: 800;
+  line-height: 1.35;
+  cursor: pointer;
+  list-style: none;
+}
+.faq-item summary::-webkit-details-marker { display: none; }
+.faq-item summary::after {
+  content: "+";
+  position: absolute;
+  right: 25px;
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: rgba(35,78,59,.09);
+  color: var(--forest);
+  font-size: 24px;
+  font-weight: 500;
+  transition: transform .25s ease, background .25s ease;
+}
+.faq-item[open] summary::after {
+  content: "−";
+  background: var(--gold);
+  color: var(--charcoal);
+}
+.faq-answer {
+  padding: 0 68px 25px 26px;
+  color: var(--muted);
+  font-size: 16px;
+  line-height: 1.75;
+}
+.faq-answer strong { color: var(--charcoal); }
+@media (max-width: 900px) {
+  .faq { padding: 76px 20px; }
+  .faq .section-head { margin-bottom: 30px; }
+  .faq-item { border-radius: 18px; }
+  .faq-item summary {
+    min-height: 70px;
+    padding: 19px 60px 19px 20px;
+    font-size: 16px;
+  }
+  .faq-item summary::after { right: 18px; }
+  .faq-answer {
+    padding: 0 20px 22px;
+    font-size: 15px;
+  }
+}
+
 </style>
 </head>
 
@@ -1094,6 +1181,59 @@ footer {
 </div>
 
 </div>
+</section>
+
+
+<section class="faq" id="preguntas" aria-labelledby="faq-title">
+  <div class="faq-wrap">
+    <div class="section-head">
+      <div class="kicker">PREGUNTAS FRECUENTES</div>
+      <h2 id="faq-title">Todo lo que necesitas saber antes de empezar.</h2>
+      <p>Tú eliges la misión. Nosotros te explicamos el resto.</p>
+    </div>
+
+    <div class="faq-list">
+      <details class="faq-item">
+        <summary>¿Qué es DemosVita?</summary>
+        <div class="faq-answer">DemosVita es una comunidad de personas que quieren salir de la rutina mediante pequeñas misiones en el mundo real. Cada misión propone una experiencia para descubrir lugares, conectar con otras personas, aprender algo nuevo o superar una barrera personal.</div>
+      </details>
+
+      <details class="faq-item">
+        <summary>¿Cómo funciona?</summary>
+        <div class="faq-answer">Elige una misión del catálogo, realízala y cuéntanos cómo fue desde tu cuenta. Al reportarla recibirás los puntos correspondientes y la experiencia quedará guardada en tu historial.</div>
+      </details>
+
+      <details class="faq-item">
+        <summary>¿Necesito crear una cuenta?</summary>
+        <div class="faq-answer">Puedes consultar libremente todas las misiones. Para reportar una misión, conseguir puntos, consultar tu historial o proponer nuevas experiencias necesitarás crear una cuenta gratuita.</div>
+      </details>
+
+      <details class="faq-item">
+        <summary>¿DemosVita es gratis?</summary>
+        <div class="faq-answer">Sí. Durante esta etapa, crear una cuenta, realizar misiones y utilizar las funcionalidades disponibles es completamente gratuito.</div>
+      </details>
+
+      <details class="faq-item">
+        <summary>¿Cómo se consiguen los puntos?</summary>
+        <div class="faq-answer">Cada misión concede una cantidad de <strong>XP —puntos de experiencia—</strong> según su dificultad. Cuando reportas una misión, los XP se añaden a tu cuenta. Puedes repetir una misión y cada experiencia quedará registrada por separado en tu historial.</div>
+      </details>
+
+      <details class="faq-item">
+        <summary>¿Tengo que demostrar que he realizado la misión?</summary>
+        <div class="faq-answer">Confiamos en la honestidad de la comunidad. Cada misión incluye algunas preguntas específicas sobre la experiencia y, en ciertos casos, puedes añadir una fotografía opcional. No queremos convertir las misiones en un examen, sino conocer qué te aportaron.</div>
+      </details>
+
+      <details class="faq-item">
+        <summary>¿Las respuestas de mis misiones son públicas?</summary>
+        <div class="faq-answer">No. Tus reportes quedan asociados a tu cuenta y solo tú puedes consultarlos desde tu historial. No publicaremos experiencias personales sin tu permiso.</div>
+      </details>
+
+      <details class="faq-item">
+        <summary>¿Qué ocurre si una misión me resulta incómoda o insegura?</summary>
+        <div class="faq-answer">No estás obligado a realizar ninguna misión. Adapta siempre la experiencia a tus circunstancias y evita cualquier acción que pueda ponerte en peligro, invadir la privacidad de otra persona o incumplir las normas de un espacio. Si una misión no te convence, elige otra.</div>
+      </details>
+    </div>
+  </div>
 </section>
 
 <section class="cta" id="unete">
