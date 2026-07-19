@@ -33,7 +33,16 @@
     M12_APRENDE_DE_UN_EXTRANO: 'assets/misiones/12_Aprendedeunextra%C3%B1o.jpg',
     M13_PIDE_SIN_MIEDO: 'assets/misiones/13_Pidesinmiedo.jpg',
     M14_NO_QUE_SE_CONVIERTE_EN_SI: 'assets/misiones/14_Elnoqueseconvierteensi.jpg',
-    M15_MOMENTO_INCOMODO: 'assets/misiones/15_Elmomentoincomodo.jpg'
+    M15_MOMENTO_INCOMODO: 'assets/misiones/15_Elmomentoincomodo.jpg',
+    M16_PIERDETE_A_PROPOSITO: 'assets/misiones/2_Pierdeteaproposito.jpeg',
+    M17_MESA_SIN_PANTALLAS: 'assets/misiones/6_Lamesasinpantallas.jpeg',
+    M18_CABEZA_ARRIBA: 'assets/misiones/10_Cabezaarriba.jpeg',
+    M19_DETENTE_ANTE_LA_OBRA: 'assets/misiones/15_Detenteantelaobra.jpeg',
+    M20_PERDON_SIN_PEROS: 'assets/misiones/19_Elperdonsinperos.jpeg',
+    M21_PARQUE_NUNCA_PISAS: 'assets/misiones/21_Elparquequenuncapisas.jpeg',
+    M22_BUSCA_VIA_LACTEA: 'assets/misiones/22_Buscalavialactea.jpeg',
+    M23_CAMINA_SIN_ASFALTO: 'assets/misiones/23_Caminadondenohayasfalto.jpeg',
+    M24_LA_CUMBRE: 'assets/misiones/24_Lacumbre.jpeg'
   };
 
   let missions = [];
