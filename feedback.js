@@ -3,17 +3,20 @@
 
   const client = window.demosVitaSupabase;
   const params = new URLSearchParams(location.search);
-  const missionCode = sanitize(params.get('mission') || 'M01_HALAGO_HONESTO', 80);
+  const initialMissionCode = sanitize(params.get('mission') || '', 80);
   const source = sanitize(params.get('source') || 'app', 80);
   const form = document.querySelector('#mission-feedback-form');
   const status = document.querySelector('#form-status');
   const button = form.querySelector('.submit-button');
   const fieldsContainer = document.querySelector('#dynamic-feedback-fields');
   const fieldsHelp = document.querySelector('#dynamic-fields-help');
+  const missionSelector = document.querySelector('#mission-selector');
+  const missionSummary = document.querySelector('#mission-summary');
   button.disabled = true;
 
   let session;
-  let mission;
+  let mission = null;
+  let missions = [];
   let feedbackSchema = [];
 
   init();
@@ -29,51 +32,118 @@
 
       const [profileResult, missionResult] = await Promise.all([
         client.from('profiles').select('email,explorer_number,archetype').eq('user_id', session.user.id).single(),
-        loadMission()
+        loadMissions()
       ]);
 
       if (profileResult.error) throw profileResult.error;
-      if (missionResult.error) throw new Error('No hemos encontrado la misión que quieres reportar.');
+      if (missionResult.error) throw new Error('No hemos podido cargar el catálogo de misiones.');
 
-      mission = missionResult.data;
-      feedbackSchema = normalizeSchema(mission);
-      if (!feedbackSchema.length) throw new Error('Esta misión todavía no tiene configuradas sus preguntas de feedback.');
+      missions = missionResult.data || [];
+      if (!missions.length) throw new Error('No hay misiones activas disponibles para reportar.');
 
       document.querySelector('#report-profile-name').textContent = `Explorador #${profileResult.data.explorer_number} · ${capitalize(profileResult.data.archetype || 'explorador')}`;
       document.querySelector('#report-profile-email').textContent = profileResult.data.email;
-      renderMission(mission);
-      renderDynamicFields(feedbackSchema);
-      button.disabled = false;
+      renderMissionSelector();
+
+      if (initialMissionCode && missions.some(item => item.code === initialMissionCode)) {
+        missionSelector.value = initialMissionCode;
+        selectMission(initialMissionCode);
+      } else {
+        clearMissionSelection();
+      }
+
+      missionSelector.disabled = false;
     } catch (error) {
       showError(error.message || 'No hemos podido preparar el formulario. Recarga la página.');
-      fieldsHelp.textContent = 'No se pudieron cargar las preguntas de esta misión.';
+      fieldsHelp.textContent = 'No se pudieron cargar las misiones.';
+      missionSelector.disabled = true;
       button.disabled = true;
       console.error(error);
     }
   }
 
-  async function loadMission() {
+  async function loadMissions() {
+    const fields = 'id,code,title,category,difficulty,xp,conditions,feedback_schema,feedback_questions,sort_order';
     let result = await client
       .from('missions')
-      .select('id,code,title,category,xp,feedback_schema,feedback_questions')
-      .eq('code', missionCode)
+      .select(fields)
       .eq('is_active', true)
-      .single();
+      .order('sort_order', { ascending: true })
+      .order('code', { ascending: true });
 
-    if (result.error && /feedback_schema/i.test(result.error.message || '')) {
+    if (result.error && /feedback_schema|sort_order|conditions/i.test(result.error.message || '')) {
       result = await client
         .from('missions')
-        .select('id,code,title,category,xp,feedback_questions')
-        .eq('code', missionCode)
+        .select('id,code,title,category,difficulty,xp,feedback_questions')
         .eq('is_active', true)
-        .single();
+        .order('code', { ascending: true });
     }
     return result;
   }
 
+  function renderMissionSelector() {
+    missionSelector.replaceChildren();
+    const empty = document.createElement('option');
+    empty.value = '';
+    empty.textContent = 'Selecciona una misión';
+    missionSelector.append(empty);
+
+    missions.forEach(currentMission => {
+      const option = document.createElement('option');
+      option.value = currentMission.code;
+      option.textContent = `Misión ${missionNumber(currentMission)} · ${currentMission.title}`;
+      missionSelector.append(option);
+    });
+  }
+
+  function selectMission(code) {
+    const selected = missions.find(item => item.code === code);
+    if (!selected) {
+      clearMissionSelection();
+      return;
+    }
+
+    mission = selected;
+    feedbackSchema = normalizeSchema(mission);
+    if (!feedbackSchema.length) {
+      clearMissionSelection('Esta misión todavía no tiene configuradas sus preguntas de feedback.');
+      return;
+    }
+
+    status.textContent = '';
+    renderMission(mission);
+    renderDynamicFields(feedbackSchema);
+    button.disabled = false;
+
+    const nextParams = new URLSearchParams(location.search);
+    nextParams.set('mission', mission.code);
+    if (!nextParams.get('source')) nextParams.set('source', source);
+    history.replaceState(null, '', `${location.pathname}?${nextParams.toString()}`);
+  }
+
+  function clearMissionSelection(message) {
+    mission = null;
+    feedbackSchema = [];
+    missionSummary.hidden = true;
+    missionSummary.replaceChildren();
+    fieldsContainer.replaceChildren();
+    fieldsHelp.textContent = message || 'Selecciona una misión para cargar sus preguntas específicas.';
+    button.disabled = true;
+    button.textContent = 'Selecciona una misión';
+  }
+
+  missionSelector.addEventListener('change', () => {
+    selectMission(sanitize(missionSelector.value, 80));
+  });
+
   form.addEventListener('submit', async event => {
     event.preventDefault();
-    if (!form.reportValidity() || !session || !mission) return;
+    if (!mission) {
+      showError('Selecciona la misión que has completado.');
+      missionSelector.focus();
+      return;
+    }
+    if (!form.reportValidity() || !session) return;
 
     setBusy(true);
     status.textContent = '';
@@ -250,14 +320,29 @@
   }
 
   function renderMission(currentMission) {
-    const summary = document.querySelector('#mission-summary');
+    const summary = missionSummary;
+    summary.hidden = false;
     summary.replaceChildren();
     const label = document.createElement('span');
-    label.textContent = `MISIÓN SELECCIONADA · ${currentMission.category}`;
+    label.textContent = `MISIÓN ${missionNumber(currentMission)} · ${currentMission.category} · ${currentMission.difficulty || 'Dificultad sin indicar'}`;
     const title = document.createElement('strong');
     title.textContent = `${currentMission.title} · +${Number(currentMission.xp || 0)} XP`;
     summary.append(label, title);
+    const conditions = Array.isArray(currentMission.conditions) ? currentMission.conditions.filter(Boolean) : [];
+    if (conditions.length) {
+      const list = element('ul', 'selected-conditions');
+      conditions.forEach(condition => list.append(element('li', '', String(condition))));
+      summary.append(list);
+    }
     button.textContent = `Completar misión · +${Number(currentMission.xp || 0)} XP`;
+  }
+
+  function missionNumber(currentMission) {
+    if (Number.isInteger(currentMission.sort_order) && currentMission.sort_order > 0) {
+      return String(currentMission.sort_order).padStart(2, '0');
+    }
+    const match = String(currentMission.code || '').match(/^M(\d+)/);
+    return match ? match[1].padStart(2, '0') : '—';
   }
 
   function element(tag, className, text) {
