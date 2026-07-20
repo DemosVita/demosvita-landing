@@ -189,10 +189,42 @@
     counter.textContent = `${visible} de ${total} misiones`;
   }
 
+  function difficultyRank(difficulty) {
+    const normalized = String(difficulty || '').trim().toLocaleLowerCase('es');
+    return {
+      'fácil': 0,
+      'facil': 0,
+      'media': 1,
+      'difícil': 2,
+      'dificil': 2,
+      'épica': 3,
+      'epica': 3
+    }[normalized] ?? 99;
+  }
+
+  function missionSortNumber(mission) {
+    const configuredOrder = Number(mission.sort_order);
+    if (Number.isFinite(configuredOrder) && configuredOrder > 0) return configuredOrder;
+    const match = String(mission.code || '').match(/^M(\d+)/);
+    return match ? Number(match[1]) : Number.MAX_SAFE_INTEGER;
+  }
+
+  function compareCategoryMissions(a, b) {
+    const difficultyDifference = difficultyRank(a.difficulty) - difficultyRank(b.difficulty);
+    if (difficultyDifference) return difficultyDifference;
+
+    const numberDifference = missionSortNumber(a) - missionSortNumber(b);
+    if (numberDifference) return numberDifference;
+
+    return String(a.title || '').localeCompare(String(b.title || ''), 'es');
+  }
+
   function renderMissions() {
     const visible = activeCategory === 'Todas'
       ? missions
-      : missions.filter(mission => mission.category === activeCategory);
+      : missions
+          .filter(mission => mission.category === activeCategory)
+          .sort(compareCategoryMissions);
 
     grid.replaceChildren(...visible.map(buildCard));
     updateCounter(visible.length, missions.length);
