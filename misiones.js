@@ -148,7 +148,12 @@
       visual.append(element('p', 'mission-motto', mission.tagline));
     }
     const content = element('div', 'mission-content');
-    content.append(element('p', 'mission-description', mission.description));
+    const description = element('div', 'mission-description-block');
+    description.append(
+      element('span', 'mission-description-label', 'Descripción de la misión'),
+      element('p', 'mission-description', mission.description)
+    );
+    content.append(description);
 
     const conditions = buildConditions(mission);
     if (conditions) content.append(conditions);
