@@ -94,7 +94,8 @@
       if (report.improvements) extras.push({ question: '¿Qué mejorarías?', answer: report.improvements });
       if (report.ideas) extras.push({ question: 'Otras ideas', answer: report.ideas });
       if (extras.length) body.append(buildReadOnlyFields(extras));
-      if (report.photo_path) body.append(buildPhotoAttachment(report.photo_path, mission.title));
+      const photoPath = report.photo_path || extractPhotoPath(report.answers);
+      if (photoPath) body.append(buildPhotoAttachment(photoPath, mission.title));
 
       const actions = document.createElement('div');
       actions.className = 'history-actions';
@@ -131,6 +132,17 @@
       details.append(summary, body);
       return details;
     }));
+  }
+
+  function extractPhotoPath(answers) {
+    const values = answers && Array.isArray(answers.responses) ? answers.responses : [];
+    const photoResponse = values.find(item =>
+      item &&
+      item.type === 'photo' &&
+      typeof item.answer === 'string' &&
+      item.answer.trim()
+    );
+    return photoResponse ? photoResponse.answer.trim() : null;
   }
 
   function normalizeResponses(answers) {
