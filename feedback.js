@@ -217,6 +217,7 @@
       label.htmlFor = inputId;
       const input = buildInput(definition, key, inputId);
       wrapper.append(label, input);
+      if (definition.type === 'photo') wrapper.append(buildPhotoConsent(input));
 
       if (definition.help) wrapper.append(element('small', '', definition.help));
       fieldsContainer.append(wrapper);
@@ -262,6 +263,31 @@
     return input;
   }
 
+  function buildPhotoConsent(photoInput) {
+    const block = element('div', 'photo-consent');
+    const note = element('p', 'photo-privacy-note', 'La fotografía será privada y solo se utilizará para registrar esta misión. Podrás verla, descargarla y eliminarla desde tu cuenta.');
+    const label = element('label', 'permission photo-rights-confirmation');
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    checkbox.name = 'photoRightsConfirmation';
+    checkbox.value = 'Sí';
+    checkbox.disabled = true;
+    const text = element('span', '', 'Confirmo que tengo derecho a utilizar esta fotografía y que cuento con la autorización de las personas reconocibles que aparecen en ella.');
+    label.append(checkbox, text);
+    block.append(note, label);
+
+    const syncConsent = () => {
+      const hasPhoto = Boolean(photoInput.files && photoInput.files[0]);
+      checkbox.disabled = !hasPhoto;
+      checkbox.required = hasPhoto;
+      if (!hasPhoto) checkbox.checked = false;
+      label.classList.toggle('is-required', hasPhoto);
+    };
+    photoInput.addEventListener('change', syncConsent);
+    syncConsent();
+    return block;
+  }
+
   function buildCheckboxField(definition, key, inputId) {
     const wrapper = element('div', 'field dynamic-confirmation');
     const label = element('label', 'permission');
@@ -297,9 +323,12 @@
       };
     });
 
+    const photoRightsConfirmed = Boolean(form.querySelector('[name="photoRightsConfirmation"]')?.checked);
     return {
       version: 1,
       mission_code: mission.code,
+      photo_rights_confirmed: photoRightsConfirmed,
+      photo_rights_confirmed_at: photoRightsConfirmed ? new Date().toISOString() : null,
       responses
     };
   }
@@ -308,6 +337,10 @@
     const input = form.querySelector('[data-feedback-photo]');
     const file = input && input.files ? input.files[0] : null;
     if (!file) return null;
+    const rightsConfirmation = form.querySelector('[name="photoRightsConfirmation"]');
+    if (!rightsConfirmation || !rightsConfirmation.checked) {
+      throw new Error('Confirma que tienes derecho a utilizar la fotografía antes de enviarla.');
+    }
     if (file.size > 4 * 1024 * 1024) throw new Error('La fotografía supera el máximo de 4 MB.');
     if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) throw new Error('La fotografía debe ser JPG, PNG o WebP.');
 

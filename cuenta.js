@@ -95,7 +95,7 @@
       if (report.ideas) extras.push({ question: 'Otras ideas', answer: report.ideas });
       if (extras.length) body.append(buildReadOnlyFields(extras));
       const photoPath = report.photo_path || extractPhotoPath(report.answers);
-      if (photoPath) body.append(buildPhotoAttachment(photoPath, mission.title));
+      if (photoPath) body.append(buildPhotoAttachment(photoPath, mission.title, report));
 
       const actions = document.createElement('div');
       actions.className = 'history-actions';
@@ -155,7 +155,7 @@
       }));
   }
 
-  function buildPhotoAttachment(photoPath, missionTitle) {
+  function buildPhotoAttachment(photoPath, missionTitle, report) {
     const attachment = element('section', 'report-photo');
     const heading = element('div', 'report-photo-heading');
     heading.append(element('span', 'report-photo-icon', '▣'), element('strong', '', 'Fotografía de la misión'));
@@ -166,7 +166,9 @@
     viewButton.type = 'button';
     const downloadButton = element('button', 'photo-download', 'Descargar');
     downloadButton.type = 'button';
-    controls.append(viewButton, downloadButton);
+    const deleteButton = element('button', 'photo-delete', 'Eliminar foto');
+    deleteButton.type = 'button';
+    controls.append(viewButton, downloadButton, deleteButton);
     attachment.append(heading, status, controls);
 
     viewButton.addEventListener('click', async () => {
@@ -202,7 +204,53 @@
       }
     });
 
+    deleteButton.addEventListener('click', async () => {
+      const confirmed = window.confirm('¿Quieres eliminar definitivamente esta fotografía? El reporte y los XP se conservarán.');
+      if (!confirmed) return;
+
+      [viewButton, downloadButton, deleteButton].forEach(button => { button.disabled = true; });
+      status.textContent = 'Eliminando fotografía…';
+      const originalAnswers = report.answers;
+      const cleanedAnswers = removePhotoReference(originalAnswers);
+
+      try {
+        const { error: reportError } = await client
+          .from('mission_reports')
+          .update({ photo_path: null, answers: cleanedAnswers })
+          .eq('id', report.id);
+        if (reportError) throw reportError;
+
+        const { error: storageError } = await client.storage
+          .from('mission-photos')
+          .remove([photoPath]);
+        if (storageError) {
+          await client.from('mission_reports')
+            .update({ photo_path: report.photo_path || photoPath, answers: originalAnswers })
+            .eq('id', report.id);
+          throw storageError;
+        }
+
+        attachment.replaceWith(element('p', 'report-photo-deleted', 'Fotografía eliminada. El reporte y los XP se conservan.'));
+      } catch (error) {
+        console.warn('No se pudo eliminar la fotografía del reporte', error);
+        status.textContent = 'No hemos podido eliminar la fotografía. Inténtalo de nuevo.';
+        [viewButton, downloadButton, deleteButton].forEach(button => { button.disabled = false; });
+      }
+    });
+
     return attachment;
+  }
+
+  function removePhotoReference(answers) {
+    if (!answers || typeof answers !== 'object') return answers;
+    const cleaned = JSON.parse(JSON.stringify(answers));
+    if (Array.isArray(cleaned.responses)) {
+      cleaned.responses = cleaned.responses.map(item => {
+        if (!item || item.type !== 'photo') return item;
+        return { ...item, answer: null };
+      });
+    }
+    return cleaned;
   }
 
   async function createPhotoUrl(photoPath, downloadName) {
