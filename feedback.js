@@ -323,9 +323,12 @@
       };
     });
 
+    const photoRightsConfirmed = Boolean(form.querySelector('[name="photoRightsConfirmation"]')?.checked);
     return {
       version: 1,
       mission_code: mission.code,
+      photo_rights_confirmed: photoRightsConfirmed,
+      photo_rights_confirmed_at: photoRightsConfirmed ? new Date().toISOString() : null,
       responses
     };
   }
