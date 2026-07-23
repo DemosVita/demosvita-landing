@@ -94,6 +94,7 @@
       if (report.improvements) extras.push({ question: '¿Qué mejorarías?', answer: report.improvements });
       if (report.ideas) extras.push({ question: 'Otras ideas', answer: report.ideas });
       if (extras.length) body.append(buildReadOnlyFields(extras));
+      if (report.photo_path) body.append(buildPhotoAttachment(report.photo_path, mission.title));
 
       const actions = document.createElement('div');
       actions.className = 'history-actions';
@@ -134,10 +135,104 @@
 
   function normalizeResponses(answers) {
     const values = answers && Array.isArray(answers.responses) ? answers.responses : [];
-    return values.filter(item => item && item.answer !== '' && item.answer !== null && item.answer !== undefined).map(item => ({
-      question: item.question || item.key || 'Respuesta',
-      answer: item.type === 'photo' ? 'Fotografía adjunta' : (typeof item.answer === 'boolean' ? (item.answer ? 'Sí' : 'No') : item.answer)
-    }));
+    return values
+      .filter(item => item && item.type !== 'photo' && item.answer !== '' && item.answer !== null && item.answer !== undefined)
+      .map(item => ({
+        question: item.question || item.key || 'Respuesta',
+        answer: typeof item.answer === 'boolean' ? (item.answer ? 'Sí' : 'No') : item.answer
+      }));
+  }
+
+  function buildPhotoAttachment(photoPath, missionTitle) {
+    const attachment = element('section', 'report-photo');
+    const heading = element('div', 'report-photo-heading');
+    heading.append(element('span', 'report-photo-icon', '▣'), element('strong', '', 'Fotografía de la misión'));
+
+    const status = element('p', 'report-photo-status', 'La imagen se cargará únicamente cuando decidas verla.');
+    const controls = element('div', 'report-photo-controls');
+    const viewButton = element('button', 'photo-button', 'Ver foto');
+    viewButton.type = 'button';
+    const downloadButton = element('button', 'photo-download', 'Descargar');
+    downloadButton.type = 'button';
+    controls.append(viewButton, downloadButton);
+    attachment.append(heading, status, controls);
+
+    viewButton.addEventListener('click', async () => {
+      setPhotoBusy(viewButton, status, true, 'Preparando foto…');
+      try {
+        const url = await createPhotoUrl(photoPath);
+        openPhotoViewer(url, missionTitle || 'Misión completada');
+        status.textContent = 'La dirección caduca automáticamente en 10 minutos.';
+      } catch (error) {
+        status.textContent = photoErrorMessage(error);
+      } finally {
+        setPhotoBusy(viewButton, status, false);
+      }
+    });
+
+    downloadButton.addEventListener('click', async () => {
+      setPhotoBusy(downloadButton, status, true, 'Preparando descarga…');
+      try {
+        const fileName = String(photoPath).split('/').pop() || 'foto-demosvita';
+        const url = await createPhotoUrl(photoPath, fileName);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = fileName;
+        link.rel = 'noopener';
+        document.body.append(link);
+        link.click();
+        link.remove();
+        status.textContent = 'Descarga preparada. El enlace caduca en 10 minutos.';
+      } catch (error) {
+        status.textContent = photoErrorMessage(error);
+      } finally {
+        setPhotoBusy(downloadButton, status, false);
+      }
+    });
+
+    return attachment;
+  }
+
+  async function createPhotoUrl(photoPath, downloadName) {
+    const options = downloadName ? { download: downloadName } : undefined;
+    const { data, error } = await client.storage
+      .from('mission-photos')
+      .createSignedUrl(photoPath, 600, options);
+    if (error || !data || !data.signedUrl) throw error || new Error('PHOTO_URL_UNAVAILABLE');
+    return data.signedUrl;
+  }
+
+  function openPhotoViewer(url, missionTitle) {
+    let dialog = document.querySelector('#report-photo-viewer');
+    if (!dialog) {
+      dialog = document.createElement('dialog');
+      dialog.id = 'report-photo-viewer';
+      dialog.className = 'photo-viewer';
+      dialog.innerHTML = '<div class="photo-viewer-card"><button class="photo-viewer-close" type="button" aria-label="Cerrar visor">×</button><p></p><img alt=""></div>';
+      dialog.querySelector('.photo-viewer-close').addEventListener('click', () => dialog.close());
+      dialog.addEventListener('click', event => { if (event.target === dialog) dialog.close(); });
+      dialog.addEventListener('close', () => {
+        const image = dialog.querySelector('img');
+        image.removeAttribute('src');
+      });
+      document.body.append(dialog);
+    }
+    dialog.querySelector('p').textContent = missionTitle;
+    const image = dialog.querySelector('img');
+    image.alt = `Fotografía del reporte de ${missionTitle}`;
+    image.src = url;
+    if (typeof dialog.showModal === 'function') dialog.showModal();
+    else window.open(url, '_blank', 'noopener');
+  }
+
+  function setPhotoBusy(button, status, busy, message) {
+    button.disabled = busy;
+    if (message) status.textContent = message;
+  }
+
+  function photoErrorMessage(error) {
+    console.warn('No se pudo recuperar la fotografía del reporte', error);
+    return 'No hemos podido abrir esta fotografía. Puede que el archivo ya no exista o que el acceso haya caducado.';
   }
 
   function buildReadOnlyFields(fields) {
