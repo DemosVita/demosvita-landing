@@ -6,13 +6,13 @@
   <meta name="description" content="Tu perfil, progreso e histórico de misiones DemosVita.">
   <title>Mi cuenta · DemosVita</title>
   <link rel="stylesheet" href="misiones.css?v=20260718-4">
-  <link rel="stylesheet" href="cuenta.css?v=20260723-2">
+  <link rel="stylesheet" href="cuenta.css?v=20260809-1">
   <style>html.auth-pending body{visibility:hidden}.guard-error{min-height:100vh;display:grid;place-content:center;gap:18px;text-align:center;padding:30px}.guard-error img{margin:auto}.guard-error a{color:#234E3B;font-weight:800}</style>
   <script>document.documentElement.classList.add('auth-pending')</script>
   <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script defer src="supabase-config.js"></script>
   <script defer src="auth-guard.js"></script>
-  <script defer src="cuenta.js?v=20260723-3"></script>
+  <script defer src="cuenta.js?v=20260809-1"></script>
 </head>
 <body class="account-page">
   <header class="site-header">
@@ -33,6 +33,16 @@
         <article class="stat-card"><span>NIVEL</span><strong id="profile-level">1</strong><small id="level-progress">0 / 500 XP</small></article>
         <article class="stat-card"><span>EXPERIENCIA</span><strong><b id="profile-xp">0</b> XP</strong><small>Ganados completando misiones</small></article>
         <article class="stat-card"><span>INTENTOS</span><strong id="report-count">0</strong><small>Misiones reportadas</small></article>
+      </section>
+
+      <section class="badges-section" aria-labelledby="badges-title">
+        <div class="section-heading">
+          <div><span class="eyebrow">RECUERDOS ÚNICOS</span><h2 id="badges-title">Mis insignias</h2></div>
+          <span class="counter" id="badge-count">0 insignias</span>
+        </div>
+        <p class="badges-intro">Las misiones especiales no dan XP: dejan una insignia exclusiva en tu colección.</p>
+        <div id="badge-grid" class="badge-grid"></div>
+        <div id="empty-badges" class="empty-badges" hidden><span>◌</span><p>Todavía no has conseguido ninguna insignia especial.</p><a href="misiones.html#special-title">Ver misiones especiales →</a></div>
       </section>
 
       <section class="history-section" id="historico">

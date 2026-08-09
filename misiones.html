@@ -5,10 +5,10 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="description" content="Descubre las misiones activas de DemosVita y atrévete a vivir algo diferente.">
   <title>Misiones · DemosVita</title>
-  <link rel="stylesheet" href="misiones.css?v=20260720-1">
+  <link rel="stylesheet" href="misiones.css?v=20260809-1">
   <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script defer src="supabase-config.js"></script>
-  <script defer src="misiones.js?v=20260720-2"></script>
+  <script defer src="misiones.js?v=20260809-1"></script>
 </head>
 <body>
   <header class="site-header">
@@ -58,6 +58,19 @@
       <noscript>
         <p class="catalog-status">Necesitas activar JavaScript para consultar el catálogo de misiones.</p>
       </noscript>
+    </section>
+
+    <section class="special-missions" aria-labelledby="special-title">
+      <div class="section-heading">
+        <div>
+          <span class="eyebrow">EXPERIENCIAS IRREPETIBLES</span>
+          <h2 id="special-title">Misiones especiales</h2>
+          <p>Eventos únicos, disponibles durante un tiempo limitado. Complétalos para conseguir insignias exclusivas, sin sumar XP.</p>
+        </div>
+        <span class="counter" id="special-counter" aria-live="polite">Cargando…</span>
+      </div>
+      <div id="special-missions-grid" class="special-missions-grid" aria-live="polite"></div>
+      <div id="special-empty" class="special-empty" hidden>No hay ninguna misión especial anunciada por ahora.</div>
     </section>
 
     <section class="coming-soon">
