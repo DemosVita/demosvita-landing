@@ -8,6 +8,9 @@
   const loading = document.getElementById('catalog-loading');
   const errorBox = document.getElementById('catalog-error');
   const retryButton = document.getElementById('retry-catalog');
+  const specialGrid = document.getElementById('special-missions-grid');
+  const specialCounter = document.getElementById('special-counter');
+  const specialEmpty = document.getElementById('special-empty');
 
   const categoryIcons = {
     Explora: '🧭',
@@ -313,8 +316,9 @@
     filters.hidden = true;
 
     try {
+      const specialPromise = loadSpecialMissions();
       missions = await fetchMissions();
-      await loadCompletionState();
+      await Promise.all([loadCompletionState(), specialPromise]);
       activeCategory = 'Todas';
       renderFilters();
       renderMissions();
@@ -325,6 +329,73 @@
       errorBox.hidden = false;
       counter.textContent = 'Catálogo no disponible';
     }
+  }
+
+  function specialState(mission) {
+    const now = Date.now();
+    if (now < new Date(mission.claim_starts_at).getTime()) return 'upcoming';
+    if (now <= new Date(mission.claim_ends_at).getTime()) return 'active';
+    return 'expired';
+  }
+
+  function relativeDeadline(mission, state) {
+    const target = state === 'upcoming' ? mission.claim_starts_at : mission.claim_ends_at;
+    const diff = Math.max(0, new Date(target).getTime() - Date.now());
+    const hours = Math.ceil(diff / 3600000);
+    if (hours < 24) return state === 'upcoming' ? `Se abre en ${hours} h` : `Quedan ${hours} h`;
+    const days = Math.ceil(hours / 24);
+    return state === 'upcoming' ? `Se abre en ${days} días` : `Quedan ${days} días`;
+  }
+
+  function buildSpecialCard(mission) {
+    const state = specialState(mission);
+    const labels = { upcoming: 'Próximamente', active: 'Activa ahora', expired: 'Finalizada' };
+    const card = element('article', `special-card is-${state}`);
+    const art = element('div', 'special-art');
+    const image = document.createElement('img');
+    image.src = mission.cover_image_url || mission.badge_image_url;
+    image.alt = `Imagen de ${mission.title}`;
+    art.append(image, element('span', `special-state ${state}`, labels[state]));
+    const body = element('div', 'special-body');
+    body.append(
+      element('span', 'special-kicker', '✦ MISIÓN ESPECIAL'),
+      element('h3', '', mission.title),
+      element('p', '', mission.description)
+    );
+    const date = element('p', 'special-date', new Intl.DateTimeFormat('es-ES', { dateStyle: 'long', timeStyle: 'short' }).format(new Date(mission.event_starts_at)));
+    const badge = element('div', 'special-reward');
+    const badgeImage = document.createElement('img');
+    badgeImage.src = mission.badge_image_url;
+    badgeImage.alt = '';
+    badge.append(badgeImage, element('span', '', `Insignia: ${mission.badge_name}`));
+    body.append(date, badge);
+    const action = element('a', state === 'active' ? 'primary' : 'special-action', state === 'active' ? 'Registrar y conseguir insignia' : labels[state]);
+    if (state === 'active') action.href = `/mision-especial.html?mission=${encodeURIComponent(mission.code)}`;
+    else action.setAttribute('aria-disabled', 'true');
+    const deadline = element('strong', 'special-deadline', state === 'expired' ? 'El plazo para obtener esta insignia ha terminado' : relativeDeadline(mission, state));
+    body.append(deadline, action);
+    card.append(art, body);
+    return card;
+  }
+
+  async function loadSpecialMissions() {
+    if (!specialGrid) return;
+    const { data, error } = await client
+      .from('special_missions')
+      .select('id,code,title,description,event_starts_at,claim_starts_at,claim_ends_at,badge_name,badge_image_url,cover_image_url')
+      .eq('is_published', true)
+      .order('event_starts_at', { ascending: true });
+    if (error) {
+      console.warn('Las misiones especiales aún no están activadas', error);
+      specialGrid.replaceChildren();
+      specialEmpty.hidden = false;
+      specialCounter.textContent = 'Próximamente';
+      return;
+    }
+    const specialMissions = data || [];
+    specialGrid.replaceChildren(...specialMissions.map(buildSpecialCard));
+    specialEmpty.hidden = specialMissions.length > 0;
+    specialCounter.textContent = `${specialMissions.length} ${specialMissions.length === 1 ? 'evento anunciado' : 'eventos anunciados'}`;
   }
 
   filters.addEventListener('click', event => {

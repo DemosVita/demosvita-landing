@@ -21,22 +21,27 @@
       if (profileResult.error) throw profileResult.error;
       if (!profileResult.data) throw { code: 'PROFILE_NOT_FOUND', message: 'No existe el perfil vinculado' };
 
-      const [reportsResult, proposalsResult] = await Promise.all([
+      const [reportsResult, proposalsResult, badgesResult] = await Promise.all([
         client.from('mission_reports')
           .select('id,created_at,xp_awarded,status,answers,improvements,ideas,photo_path,missions(title,category,code,feedback_schema)')
           .order('created_at', { ascending: false }),
         client.from('mission_proposals')
           .select('id,created_at,status,title,category,action_description,purpose,conditions,difficulty,estimated_duration,why,contact_permission')
-          .order('created_at', { ascending: false })
+          .order('created_at', { ascending: false }),
+        client.from('user_badges')
+          .select('id,awarded_at,special_missions(title,badge_name,badge_image_url,event_starts_at)')
+          .order('awarded_at', { ascending: false })
       ]);
 
       if (reportsResult.error) console.warn('No se pudo cargar el histórico', reportsResult.error);
       if (proposalsResult.error) console.warn('No se pudieron cargar las propuestas', proposalsResult.error);
+      if (badgesResult.error) console.warn('No se pudieron cargar las insignias', badgesResult.error);
 
       renderAccount(
         profileResult.data,
         reportsResult.error ? [] : (reportsResult.data || []),
-        proposalsResult.error ? [] : (proposalsResult.data || [])
+        proposalsResult.error ? [] : (proposalsResult.data || []),
+        badgesResult.error ? [] : (badgesResult.data || [])
       );
       bindTabs();
       loading.hidden = true;
@@ -57,7 +62,7 @@
     return result;
   }
 
-  function renderAccount(profile, reports, proposals) {
+  function renderAccount(profile, reports, proposals, badges) {
     const xp = Number(profile.total_xp || 0);
     const level = Number(profile.level || 1);
     document.querySelector('#explorer-number').textContent = `#${profile.explorer_number}`;
@@ -71,6 +76,23 @@
     document.querySelector('#proposals-tab-count').textContent = proposals.length;
     renderReports(reports);
     renderProposals(proposals);
+    renderBadges(badges);
+  }
+
+  function renderBadges(badges) {
+    const grid = document.querySelector('#badge-grid');
+    const empty = document.querySelector('#empty-badges');
+    document.querySelector('#badge-count').textContent = `${badges.length} ${badges.length === 1 ? 'insignia' : 'insignias'}`;
+    empty.hidden = badges.length > 0;
+    grid.replaceChildren(...badges.map(entry => {
+      const mission = entry.special_missions || {};
+      const card = element('article', 'badge-card');
+      const image = document.createElement('img');
+      image.src = mission.badge_image_url;
+      image.alt = `Insignia ${mission.badge_name || mission.title || ''}`;
+      card.append(image, element('strong', '', mission.badge_name || mission.title || 'Insignia especial'), element('small', '', `Conseguida el ${formatDate(entry.awarded_at)}`));
+      return card;
+    }));
   }
 
   function renderReports(reports) {

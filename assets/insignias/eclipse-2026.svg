@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">Insignia Eclipse 2026</title><desc id="desc">Un eclipse dorado sobre un cielo verde oscuro</desc>
+  <defs><radialGradient id="sky"><stop stop-color="#315f49"/><stop offset="1" stop-color="#102019"/></radialGradient><filter id="glow"><feGaussianBlur stdDeviation="13"/></filter></defs>
+  <circle cx="256" cy="256" r="250" fill="#d4a017"/><circle cx="256" cy="256" r="225" fill="url(#sky)"/>
+  <circle cx="256" cy="222" r="112" fill="#d4a017" opacity=".8" filter="url(#glow)"/><circle cx="256" cy="222" r="98" fill="#f4cb55"/><circle cx="278" cy="205" r="96" fill="#101b16"/>
+  <path d="M112 367c43-45 91-67 144-67s101 22 144 67" fill="none" stroke="#d8c3a5" stroke-width="9" stroke-linecap="round"/>
+  <text x="256" y="410" fill="#faf9f6" font-family="Arial,sans-serif" font-size="28" font-weight="700" text-anchor="middle" letter-spacing="5">ECLIPSE</text><text x="256" y="445" fill="#d4a017" font-family="Arial,sans-serif" font-size="25" font-weight="700" text-anchor="middle" letter-spacing="8">2026</text>
+</svg>

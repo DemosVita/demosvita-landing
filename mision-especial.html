@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Registra una misión especial de DemosVita y consigue su insignia exclusiva.">
+  <title>Misión especial · DemosVita</title>
+  <link rel="stylesheet" href="misiones.css?v=20260809-1">
+  <style>
+    html.auth-pending body{visibility:hidden}.special-form-main{min-height:100vh;padding:145px 6% 80px;background:radial-gradient(circle at 15% 18%,rgba(212,160,23,.2),transparent 28%),#f2ede3}.special-form-shell{display:grid;grid-template-columns:.85fr 1.15fr;gap:55px;max-width:1120px;margin:auto}.special-form-copy{position:sticky;top:145px;align-self:start}.special-form-copy h1{margin:18px 0;font-size:clamp(48px,6vw,76px);line-height:.98;letter-spacing:-.06em;color:var(--forest)}.special-form-copy p{color:var(--muted);font-size:18px;line-height:1.65}.special-form-badge{display:flex;align-items:center;gap:16px;margin-top:25px}.special-form-badge img{width:92px;height:92px;border:6px solid #fff;border-radius:50%;object-fit:cover;box-shadow:0 14px 35px rgba(35,78,59,.2)}.special-form-badge strong{display:block;color:var(--forest)}.special-form-badge small{color:var(--muted)}.special-form-card{padding:40px;border:1px solid var(--line);border-radius:28px;background:#fff;box-shadow:0 28px 75px rgba(31,41,51,.1)}.special-form-card h2{color:var(--forest);font-size:32px}.special-window{margin:17px 0 28px;padding:16px;border-radius:13px;background:#f4efe4;color:var(--forest);font-weight:700;line-height:1.5}.special-form-card .field{margin-top:20px}.special-form-card .submit-button{margin-top:28px}.badge-success{text-align:center}.badge-success img{width:180px;height:180px;border:9px solid #f1e6c8;border-radius:50%;object-fit:cover;box-shadow:0 20px 55px rgba(35,78,59,.23)}.badge-success h2{margin:22px 0 8px;font-size:40px}.badge-success p{color:var(--muted);line-height:1.6}.badge-success .primary{margin-top:25px}.special-closed{padding:22px;border-radius:15px;background:#f4efe4;color:var(--forest);line-height:1.6}@media(max-width:800px){.special-form-main{padding:115px 16px 45px}.special-form-shell{grid-template-columns:1fr}.special-form-copy{position:static}.special-form-card{padding:28px 20px}}
+  </style>
+  <script>document.documentElement.classList.add('auth-pending')</script>
+  <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script defer src="supabase-config.js"></script>
+  <script defer src="auth-guard.js"></script>
+  <script defer src="mision-especial.js?v=20260809-1"></script>
+</head>
+<body>
+  <header class="site-header"><a class="brand" href="/" aria-label="DemosVita, inicio"><img src="/logo-green.png" alt="" width="52" height="52"><span>DemosVita<b>.</b></span></a><nav><a href="/">Inicio</a><a class="active" href="/misiones.html">Misiones</a><a class="nav-button" href="/cuenta.html">Mi cuenta</a></nav></header>
+  <main class="special-form-main">
+    <div class="special-form-shell">
+      <section class="special-form-copy"><span class="eyebrow">MISIÓN ESPECIAL</span><h1 id="special-title">Preparando el evento…</h1><p id="special-description"></p><div class="special-form-badge" id="special-badge" hidden><img alt=""><div><strong></strong><small>Insignia exclusiva · 0 XP</small></div></div></section>
+      <section class="special-form-card">
+        <div id="special-loading">Comprobando el plazo de la misión…</div>
+        <form id="special-form" hidden>
+          <h2>Registra tu experiencia</h2><div class="special-window" id="special-window"></div>
+          <div class="field"><label for="special-location">¿Desde dónde viviste el evento?</label><input id="special-location" name="location" maxlength="160" required placeholder="Ciudad o lugar"></div>
+          <div class="field"><label for="special-highlight">¿Qué fue lo que más te sorprendió?</label><textarea id="special-highlight" name="highlight" rows="5" maxlength="2000" required placeholder="Cuéntanos brevemente tu experiencia"></textarea></div>
+          <label class="permission"><input type="checkbox" name="honesty" required><span>Confirmo que participé en esta experiencia durante el plazo indicado.</span></label>
+          <button class="submit-button" type="submit">Conseguir insignia</button><p id="special-status" class="form-status" role="status"></p>
+        </form>
+        <div id="special-closed" class="special-closed" hidden></div>
+        <div id="badge-success" class="badge-success" hidden><img alt=""><h2>¡Insignia conseguida!</h2><p></p><a class="primary" href="/cuenta.html#badges-title">Ver en mi colección</a></div>
+      </section>
+    </div>
+  </main>
+  <nav class="mobile-app-nav" aria-label="Navegación móvil"><a href="/"><span>⌂</span>Inicio</a><a class="active" href="/misiones.html"><span>✦</span>Misiones</a><a href="/feedback.html"><span>✓</span>Reportar</a><a href="/cuenta.html"><span>●</span>Cuenta</a></nav>
+</body>
+</html>
